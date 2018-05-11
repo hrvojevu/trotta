@@ -2,8 +2,9 @@
 
 const util = require('util');
 
-const config = require('config');
 const bodyParser = require('body-parser');
+const config = require('config');
+const cors = require('cors');
 const express = require('express');
 const { Nuxt, Builder } = require('nuxt');
 
@@ -31,6 +32,9 @@ async function setup() {
 
   // Use sessions
   app.use(session);
+
+  // Enable CORS Requests
+  app.use(cors({ origin: config.get('app.cors.origin').split(',') }));
 
   // Register router middleware
   router.register(app, config.get('app.settings'));

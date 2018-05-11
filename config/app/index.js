@@ -2,11 +2,13 @@
 
 const { deferConfig: defer } = require('config/defer');
 
+const cors = require('./cors');
 const middleware = require('./middleware');
 const session = require('./session');
 const settings = require('./settings');
 
 exports.default = {
+  cors: cors.default,
   middleware: middleware.default,
   session: session.default,
   settings: settings.default,
@@ -19,6 +21,7 @@ exports.development = {
   },
   hostname: '0.0.0.0',
   port: 3000,
+  cors: cors.development,
   middleware: middleware.development,
   session: session.development,
   settings: settings.development,
