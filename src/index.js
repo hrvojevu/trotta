@@ -21,7 +21,7 @@ const hostname = config.get('app.hostname');
 // The port assigned to the Express application
 const port = config.get('app.port');
 
-async function setup () {
+async function setup() {
   // Set application settings
   Object.entries(config.get('app.settings')).forEach((entry) => app.set(...entry));
 
@@ -48,7 +48,7 @@ async function setup () {
   app.use(nuxt.render);
 }
 
-async function start () {
+async function start() {
   await setup();
 
   const listen = util.promisify(app.listen.bind(app));
@@ -59,7 +59,7 @@ async function start () {
   return listen(port, hostname);
 }
 
-(async function () {
+(async function () { // eslint-disable-line func-names
   try {
     // Initialize data store
     await dataStore.sequelize.sync({ force: true });
@@ -72,4 +72,4 @@ async function start () {
     console.error({ err }, 'Failed to start');
     process.exit();
   }
-})();
+}());

@@ -31,7 +31,7 @@ const User = sequelize.define('User', {
   },
 });
 
-User.prototype.clean = function () {
+User.prototype.clean = () => {
   const user = this.toJSON();
 
   user.fullName = `${user.firstName} ${user.lastName}`;

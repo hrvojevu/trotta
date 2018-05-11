@@ -1,6 +1,6 @@
-const pkg = require('./package')
+const pkg = require('./package');
 
-const nodeExternals = require('webpack-node-externals')
+const nodeExternals = require('webpack-node-externals'); // eslint-disable-line import/no-extraneous-dependencies
 
 module.exports = {
   mode: 'spa',
@@ -69,15 +69,15 @@ module.exports = {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /(node_modules)/
-        })
+        });
       }
       if (ctx.isServer) {
-        config.externals = [
+        config.externals = [ // eslint-disable-line no-param-reassign
           nodeExternals({
             whitelist: [/^vuetify/]
           })
-        ]
+        ];
       }
     }
   }
-}
+};

@@ -17,6 +17,12 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    // Strict mode
+    strict: 0,
+    // Errors
+    'no-console': 0,
+    // ES6
+    'arrow-parens': ['error', 'always'],
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
