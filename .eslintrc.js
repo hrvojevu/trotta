@@ -8,6 +8,7 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
+    'airbnb',
     'plugin:vue/strongly-recommended',
   ],
   // required to lint *.vue files
@@ -15,5 +16,18 @@ module.exports = {
     'vue'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    // allow async-await
+    'generator-star-spacing': 'off',
+    // allow debugger during development
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'vue/max-attributes-per-line': [2, {
+      'singleline': 2,
+      'multiline': {
+        'max': 2,
+        'allowFirstLine': false
+      }
+    }],
+    'comma-dangle': 'off'
+  }
 }
