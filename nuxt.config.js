@@ -1,6 +1,7 @@
-const pkg = require('./package');
-
+const nodeConfig = require('config');
 const nodeExternals = require('webpack-node-externals'); // eslint-disable-line import/no-extraneous-dependencies
+
+const pkg = require('./package');
 
 module.exports = {
   mode: 'spa',
@@ -51,7 +52,7 @@ module.exports = {
   ** Axios module configuration
   */
   axios: {
-    // See https://github.com/nuxt-community/axios-module#options
+    baseURL: nodeConfig.get('app.api.uri'),
   },
 
   /*

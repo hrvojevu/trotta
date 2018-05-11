@@ -9,7 +9,6 @@
       md6>
       <div class="text-xs-center">
         <logo/>
-        <vuetify-logo/>
       </div>
       <v-card>
         <v-card-title class="headline">Welcome to the Vuetify + Nuxt.js template</v-card-title>
@@ -18,6 +17,9 @@
           It was designed to empower developers to create amazing applications.</p>
           <div class="text-xs-right">
             <em><small>&mdash; John Leider</small></em>
+            <p
+              v-for="user in users"
+              :key="user.name">{{ user.name }}</p>
           </div>
           <hr class="my-3">
           <a href="https://nuxtjs.org/" target="_blank">Nuxt Documentation</a>
@@ -38,11 +40,16 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'; // eslint-disable-line import/no-unresolved
+import Logo from '../components/Logo.vue';
 
 export default {
+  async asyncData({ app }) {
+    const users = await app.$axios.$get('/users');
+
+    return { users };
+  },
   components: {
     Logo,
-  }
+  },
 };
 </script>
