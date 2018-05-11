@@ -1,31 +1,75 @@
+'use strict';
 
-const express = require('express')
-const { Nuxt, Builder } = require('nuxt')
-const app = express()
-const host = process.env.HOST || '127.0.0.1'
-const port = process.env.PORT || 3000
+const util = require('util');
 
-app.set('port', port)
+const config = require('config');
+const bodyParser = require('body-parser');
+const express = require('express');
+const { Nuxt, Builder } = require('nuxt');
 
-// Import and Set Nuxt.js options
-let config = require('../nuxt.config.js')
-config.dev = !(process.env.NODE_ENV === 'production')
+const dataStore = require('./dataStore');
+const nuxtConfig = require('../nuxt.config.js');
+const session = require('./session');
+const router = require('./web');
 
-async function start() {
+// The express application instance
+const app = express();
+
+// The hostname assigned to the Express application
+const hostname = config.get('app.hostname');
+
+// The port assigned to the Express application
+const port = config.get('app.port');
+
+async function setup () {
+  // Set application settings
+  Object.entries(config.get('app.settings')).forEach((entry) => app.set(...entry));
+
+  // Use JSON body parser
+  app.use(bodyParser.json(config.get('app.middleware.bodyParser.json')));
+  app.use(bodyParser.urlencoded(config.get('app.middleware.bodyParser.urlencoded')));
+
+  // Use sessions
+  app.use(session);
+
+  // Register router middleware
+  router.register(app, config.get('app.settings'));
+
   // Init Nuxt.js
-  const nuxt = new Nuxt(config)
+  const nuxt = new Nuxt(nuxtConfig);
 
   // Build only in dev mode
-  if (config.dev) {
-    const builder = new Builder(nuxt)
-    await builder.build()
+  if (process.env.NODE_ENV === 'development') {
+    const builder = new Builder(nuxt);
+    builder.build();
   }
 
-  // Give nuxt middleware to express
-  app.use(nuxt.render)
-
-  // Listen the server
-  app.listen(port, host)
-  console.log('Server listening on http://' + host + ':' + port) // eslint-disable-line no-console
+  // Give Nuxt middleware to express
+  app.use(nuxt.render);
 }
-start()
+
+async function start () {
+  await setup();
+
+  const listen = util.promisify(app.listen.bind(app));
+
+  app.set('hostname', hostname);
+  app.set('port', port);
+
+  return listen(port, hostname);
+}
+
+(async function () {
+  try {
+    // Initialize data store
+    await dataStore.sequelize.sync({ force: true });
+    console.log('Data store initiazlied.');
+
+    // Start application
+    await start();
+    console.info(`Server listening at ${hostname}:${port}`);
+  } catch (err) {
+    console.error({ err }, 'Failed to start');
+    process.exit();
+  }
+})();
