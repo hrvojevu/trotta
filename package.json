@@ -24,6 +24,7 @@
     "mysql2": "^1.5.3",
     "nuxt": "^1.0.0",
     "sequelize": "^4.37.7",
+    "vue": "^2.5.16",
     "vuetify": "^0.17.3"
   },
   "devDependencies": {
