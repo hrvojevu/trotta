@@ -1,7 +1,6 @@
 # the-black-project
 
-> My laudable Nuxt.js project
-
+> -
 ## Build Setup
 
 ``` bash
@@ -18,5 +17,3 @@ $ yarn start
 # generate static project
 $ yarn run generate
 ```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
