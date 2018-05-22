@@ -29,6 +29,11 @@ const User = sequelize.define('User', {
   password: {
     type: Sequelize.STRING
   },
+  role: {
+    type: Sequelize.ENUM,
+    defaultValue: 'US',
+    values: ['SU', 'AD', 'US'],
+  },
 });
 
 User.prototype.clean = () => {

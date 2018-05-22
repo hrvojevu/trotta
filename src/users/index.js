@@ -2,10 +2,13 @@
 
 const router = require('express-promise-router')();
 
-const { list, get } = require('./userController');
+const userController = require('./userController');
 
 router
-  .get('/', list)
-  .get('/:id', get);
+  .get('/', userController.list)
+  .get('/:id', userController.get)
+  .post('/:id', userController.create)
+  .patch('/:id', userController.patch)
+  .delete('/:id', userController.remove);
 
 module.exports = { router };
