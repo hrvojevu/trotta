@@ -36,5 +36,8 @@ module.exports = {
     }],
     'comma-dangle': 'off',
     'object-curly-newline': 'off',
+    'no-param-reassign': ['error', {
+      props: false,
+    }],
   }
 }
