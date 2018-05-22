@@ -34,6 +34,7 @@ module.exports = {
         'allowFirstLine': false
       }
     }],
-    'comma-dangle': 'off'
+    'comma-dangle': 'off',
+    'object-curly-newline': ['error', 'never'],
   }
 }
