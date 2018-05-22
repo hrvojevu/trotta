@@ -12,6 +12,7 @@ const dataStore = require('./dataStore');
 const nuxtConfig = require('../nuxt.config.js');
 const session = require('./session');
 const router = require('./web');
+const { seed } = require('../util');
 
 // The express application instance
 const app = express();
@@ -68,6 +69,9 @@ async function start() {
     // Initialize data store
     await dataStore.sequelize.sync({ force: true });
     console.log('Data store initiazlied.');
+
+    // Add superuser
+    await seed.addSuperUser();
 
     // Start application
     await start();
