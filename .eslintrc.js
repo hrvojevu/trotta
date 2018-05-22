@@ -35,6 +35,6 @@ module.exports = {
       }
     }],
     'comma-dangle': 'off',
-    'object-curly-newline': ['error', 'never'],
+    'object-curly-newline': 'off',
   }
 }
