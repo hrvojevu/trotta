@@ -57,6 +57,12 @@ module.exports = {
   },
 
   /*
+  ** Set middleware which will be applied to all rotues
+  */
+  router: {
+    middleware: 'auth'
+  },
+  /*
   ** Build configuration
   */
   build: {
