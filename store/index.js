@@ -2,7 +2,7 @@ import Vuex from 'vuex';
 
 import auth from './auth';
 
-export default () => new Vuex.Store({
+const store = () => new Vuex.Store({
   actions: {
     nuxtServerInit({ commit }, { req }) {
       if (req.session && req.session.authUser) commit('auth/setUser', req.session.authUser);
@@ -13,3 +13,5 @@ export default () => new Vuex.Store({
     auth,
   },
 });
+
+export default store;
