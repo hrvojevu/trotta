@@ -4,7 +4,7 @@ const nodeExternals = require('webpack-node-externals'); // eslint-disable-line 
 const pkg = require('./package');
 
 module.exports = {
-  mode: 'spa',
+  mode: 'universal',
 
   /*
   ** Headers of the page
