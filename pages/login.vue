@@ -9,6 +9,15 @@
           <h1 class="headline mb-0">Login</h1>
         </v-card-title>
         <v-card-text>
+          <v-alert
+            :value="error"
+            color="warning"
+            icon="priority_high"
+            transition="scale-transition"
+            class="pa-2"
+          >
+            {{ error }}
+          </v-alert>
           <form>
             <v-text-field
               v-validate="'required'"
@@ -40,31 +49,50 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   $_veeValidate: {
     validator: 'new'
   },
+  middleware: 'login',
   layout: 'auth',
-  data: () => ({
-    username: '',
-    password: '',
-    dictionary: {
-      custom: {
-        username: {
-          required: () => 'Username can not be empty',
-        },
-        password: {
-          required: () => 'Password can not be empty',
-        },
+  data() {
+    return {
+      error: '',
+      username: '',
+      password: '',
+      dictionary: {
+        custom: {
+          username: {
+            required: () => 'Username can not be empty',
+          },
+          password: {
+            required: () => 'Password can not be empty',
+          },
+        }
       }
-    }
-  }),
+    };
+  },
   mounted() {
     this.$validator.localize('en', this.dictionary);
   },
   methods: {
-    submit() {
-      this.$validator.validateAll();
+    ...mapActions('auth', ['login']),
+    async submit() {
+      const valid = await this.$validator.validateAll();
+
+      if (!valid) {
+        return;
+      }
+
+      try {
+        await this.login({ username: this.username, password: this.password });
+
+        this.$router.push('/');
+      } catch (error) {
+        this.error = error.message;
+      }
     },
   }
 };

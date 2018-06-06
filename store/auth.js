@@ -10,9 +10,13 @@ const auth = {
   },
   actions: {
     async login({ commit }, { username, password }) {
-      const { data } = await this.$axios.$post('/auth', { username, password });
+      try {
+        const user = await this.$axios.$post('/auth', { username, password });
 
-      commit('setUser', data);
+        commit('setUser', user);
+      } catch (error) {
+        throw new Error(error.response.data.error);
+      }
     },
   },
   mutations: {
