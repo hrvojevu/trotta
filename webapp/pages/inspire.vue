@@ -2,7 +2,7 @@
   <v-layout>
     <v-flex text-xs-center>
       <img
-        src="/v.png"
+        src="~/assets/v.png"
         alt="Vuetify.js"
         class="mb-5">
       <blockquote class="blockquote">

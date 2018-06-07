@@ -7,6 +7,11 @@ module.exports = {
   mode: 'universal',
 
   /*
+  ** The source directory of a nuxt.js application
+  */
+  srcDir: 'webapp/',
+
+  /*
   ** Headers of the page
   */
   head: {
@@ -47,7 +52,8 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/router',
   ],
   /*
   ** Axios module configuration
