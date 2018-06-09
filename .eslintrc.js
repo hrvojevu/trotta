@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   root: true,
   env: {
@@ -39,6 +41,7 @@ module.exports = {
     'no-param-reassign': ['error', {
       props: false,
     }],
-    'import/extensions': { 'js': 'always', 'json': 'never' },
+    'import/extensions': { 'js': 'never', 'vue': 'never' },
+    'import/no-unresolved': 'never',
   }
 }

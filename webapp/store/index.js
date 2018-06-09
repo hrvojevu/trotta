@@ -1,8 +1,3 @@
-
-/*
-  eslint-disable import/no-unresolved
-*/
-
 import Vuex from 'vuex';
 
 import auth from '~/auth/authStore';
