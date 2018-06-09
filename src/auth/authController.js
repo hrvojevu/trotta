@@ -17,7 +17,7 @@ async function login(req, res) {
 function logout(req, res) {
   delete req.session.authUser;
 
-  res.status(200);
+  res.sendStatus(200);
 }
 
 module.exports = {

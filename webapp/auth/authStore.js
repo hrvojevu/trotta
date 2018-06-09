@@ -19,22 +19,17 @@ const auth = {
       }
     },
     async logout({ commit }) {
-      console.log('logout');
-
       try {
         await this.$axios.$delete('/auth');
+
+        commit('setUser', null);
       } catch (error) {
         console.log(error);
       }
-      console.log('logout 1');
-      // ne zove drugi console, jer je async funkcija
-
-      commit('setUser', null);
     },
   },
   mutations: {
     setUser: (state, user) => {
-      console.log('setuser');
       state.authUser = user;
     }
   }

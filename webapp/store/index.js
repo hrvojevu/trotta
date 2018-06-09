@@ -1,6 +1,11 @@
+
+/*
+  eslint-disable import/no-unresolved
+*/
+
 import Vuex from 'vuex';
 
-import auth from './auth';
+import auth from '~/auth/authStore';
 
 const store = () => new Vuex.Store({
   actions: {

@@ -22,6 +22,16 @@
             <v-list-tile-title v-text="item.title"/>
           </v-list-tile-content>
         </v-list-tile>
+        <v-divider/>
+        <v-list-tile @click="out">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Logout</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-divider/>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
@@ -44,6 +54,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data() {
     return {
@@ -55,6 +67,14 @@ export default {
       ],
       title: 'Vuetify.js'
     };
-  }
+  },
+  methods: {
+    ...mapActions('auth', ['logout']),
+    async out() {
+      await this.logout();
+
+      this.$router.push('/login');
+    },
+  },
 };
 </script>

@@ -1,12 +1,13 @@
 /*
   eslint-disable import/prefer-default-export, import/no-unresolved
 */
+
 import Vue from 'vue';
 import Router from 'vue-router';
 
 import Home from '~/pages/home';
 import Inspire from '~/pages/inspire';
-import Login from '~/pages/login';
+import Login from '~/auth/login';
 
 Vue.use(Router);
 
