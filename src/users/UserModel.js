@@ -1,38 +1,51 @@
-const Sequelize = require('sequelize');
+'use strict';
 
-const { sequelize } = require('../dataStore');
+const { DataTypes, Model } = require('sequelize');
 
-const User = sequelize.define('User', {
-  id: {
-    type: Sequelize.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    primaryKey: true
-  },
-  firstName: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  lastName: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  username: {
-    type: Sequelize.STRING
-  },
-  email: {
-    type: Sequelize.STRING,
-    validate: {
-      isEmail: true
-    }
-  },
-  password: {
-    type: Sequelize.STRING
-  },
-  role: {
-    type: Sequelize.ENUM,
-    defaultValue: 'US',
-    values: ['SU', 'AD', 'US'],
-  },
-});
+class UserModel extends Model {
+  static fields() {
+    return {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { isEmail: true },
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        validate: { notEmpty: true },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        validate: { notEmpty: true },
+      },
+      username: {
+        type: DataTypes.STRING
+      },
+      password: {
+        type: DataTypes.STRING
+      },
+      role: {
+        type: DataTypes.ENUM,
+        defaultValue: 'US',
+        values: ['SU', 'AD', 'US'],
+      },
+      // Define timestamp fields explicitly to preserve camelCase in code
+      createdAt: {
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+      },
+      deletedAt: {
+        type: DataTypes.DATE,
+      },
+    };
+  }
+}
 
-module.exports = User;
+module.exports = UserModel;

@@ -4,9 +4,12 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const { sequelize } = require('./dataStore');
 
-module.exports = session({
-  store: new SequelizeStore({
-    db: sequelize
+const store = new SequelizeStore({ db: sequelize });
+
+module.exports = {
+  session: session({
+    store,
+    ...config.get('app.session'),
   }),
-  ...config.get('app.session'),
-});
+  store,
+};

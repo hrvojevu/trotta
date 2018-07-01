@@ -10,9 +10,7 @@ const { Nuxt, Builder } = require('nuxt');
 
 const dataStore = require('./dataStore');
 const nuxtConfig = require('../nuxt.config.js');
-const session = require('./session');
 const router = require('./web');
-const { seed } = require('../util');
 
 // The express application instance
 const app = express();
@@ -31,8 +29,17 @@ async function setup() {
   app.use(bodyParser.json(config.get('app.middleware.bodyParser.json')));
   app.use(bodyParser.urlencoded(config.get('app.middleware.bodyParser.urlencoded')));
 
+  /*
+   * Session is imported here since `dataStore` is initialized on application start and Sequelize
+   * instance is not available before.
+  */
+  const { session, store } = require('./session'); // eslint-disable-line global-require
+
   // Use sessions
   app.use(session);
+
+  // Create the `session` table in the database.
+  store.sync();
 
   // Enable CORS Requests
   app.use(cors({ origin: config.get('app.cors.origin').split(',') }));
@@ -67,11 +74,8 @@ async function start() {
 (async function () { // eslint-disable-line func-names
   try {
     // Initialize data store
-    await dataStore.sequelize.sync({ force: true });
+    await dataStore.init(config.get('dataStore'));
     console.log('Data store initiazlied.');
-
-    // Add superuser
-    await seed.addSuperUser();
 
     // Start application
     await start();
