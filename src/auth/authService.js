@@ -3,7 +3,7 @@
 const bcrypt = require('bcryptjs');
 const { omit } = require('lodash');
 
-const UserModel = require('../users/UserModel');
+const UserModel = require('../user/UserModel');
 
 async function authenticate(username, password) {
   const user = await UserModel.find({ where: { username } });
