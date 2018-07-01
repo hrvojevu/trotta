@@ -43,5 +43,13 @@ module.exports = {
     }],
     'import/extensions': { 'js': 'never', 'vue': 'never' },
     'import/no-unresolved': 'never',
+    'max-len': ['error', 120, 2, {
+      ignoreComments: false,
+      ignoreTrailingComments: false,
+      ignoreUrls: true,
+      ignoreStrings: true,
+      ignoreTemplateLiterals: true,
+      ignoreRegExpLiterals: true,
+    }],
   }
 }
