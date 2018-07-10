@@ -1,6 +1,7 @@
 import Vuex from 'vuex';
 
 import auth from '~/auth/authStore';
+import pool from '~/pool/poolStore';
 
 const store = () => new Vuex.Store({
   actions: {
@@ -11,6 +12,7 @@ const store = () => new Vuex.Store({
   },
   modules: {
     auth,
+    pool,
   },
 });
 

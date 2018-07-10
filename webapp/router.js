@@ -6,8 +6,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import Home from '~/home';
-import Inspire from '~/inspire';
 import Login from '~/auth/login';
+import Pool from '~/pool/pool-main.vue';
+import PoolView from '~/pool/pool-view.vue';
 
 Vue.use(Router);
 
@@ -24,9 +25,17 @@ export function createRouter() {
         component: Login,
       },
       {
-        path: '/inspire',
-        component: Inspire,
-      }
+        path: '/bazeni/:type',
+        component: Pool,
+        children: [{
+          path: ':id',
+          component: PoolView,
+        }],
+      },
+      {
+        path: '*',
+        redirect: { path: '/' },
+      },
     ]
   });
 }
