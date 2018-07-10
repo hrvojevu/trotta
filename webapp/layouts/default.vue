@@ -8,20 +8,42 @@
       app
     >
       <v-list>
-        <v-list-tile
-          router
-          :to="item.to"
-          :key="i"
-          v-for="(item, i) in items"
-          exact
-        >
-          <v-list-tile-action>
-            <v-icon v-html="item.icon"/>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"/>
-          </v-list-tile-content>
-        </v-list-tile>
+        <template v-for="link in links">
+          <v-list-group
+            v-if="link.subLinks"
+            v-model="link.active"
+            :key="link.title"
+            :prepend-icon="link.icon"
+            no-action
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>{{ link.title }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile
+              router
+              :to="subLink.to"
+              v-for="subLink in link.subLinks"
+              :key="subLink.title"
+            >
+              <v-list-tile-content>
+                <v-list-tile-title>{{ subLink.title }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+          <v-list-tile
+            v-else
+            :key="link.title"
+            router
+            :to="link.to"
+          >
+            <v-list-tile-action>
+              <v-icon>{{ link.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title>{{ link.title }}</v-list-tile-title>
+          </v-list-tile>
+        </template>
         <v-divider/>
         <v-list-tile @click="out">
           <v-list-tile-action>
@@ -59,11 +81,20 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
-      clipped: false,
+      clipped: true,
       drawer: true,
-      items: [
-        { icon: 'apps', title: 'Welcome', to: '/' },
-        { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+      links: [
+        { icon: 'apps', title: 'Početna', to: '/' },
+        {
+          icon: 'crop_landscape',
+          title: 'Bazeni',
+          subLinks: [
+            { title: 'Veliki bazeni', to: { path: '/bazeni/BV' } },
+            { title: 'Veliki predbazeni', to: { path: '/bazeni/PBV' } },
+            { title: 'Mali predbazeni', to: { path: '/bazeni/PBM' } },
+            { title: 'Kanali', to: { path: '/bazeni/K' } },
+          ],
+        },
       ],
       title: 'Vuetify.js'
     };
