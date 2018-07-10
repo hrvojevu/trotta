@@ -6,6 +6,8 @@
  */
 const tableNames = [
   'user',
+  'pool_type',
+  'pool',
 ];
 
 module.exports = tableNames;
