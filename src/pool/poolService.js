@@ -1,16 +1,27 @@
 'use strict';
 
+const GenerationModel = require('../generation/GenerationModel');
 const PoolModel = require('./PoolModel');
 const PoolTypeModel = require('./PoolTypeModel');
 
-function list() {
-  return PoolModel.findAll({
-    include: [{ model: PoolTypeModel, as: 'type' }],
-  });
+function list(generations = false) {
+  const include = [{ model: PoolTypeModel, as: 'type' }];
+
+  if (generations) {
+    include.push({ model: GenerationModel, as: 'generations' });
+  }
+
+  return PoolModel.findAll({ include });
 }
 
-function get(id) {
-  return PoolModel.findById(id);
+function get(id, generations = false) {
+  const include = [{ model: PoolTypeModel, as: 'type' }];
+
+  if (generations) {
+    include.push({ model: GenerationModel, as: 'generations' });
+  }
+
+  return PoolModel.findById(id, { include });
 }
 
 function create(pool) {
