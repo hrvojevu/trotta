@@ -2,7 +2,7 @@
 
 const { DataTypes, Model } = require('sequelize');
 
-class PoolModel extends Model {
+class GenerationModel extends Model {
   static fields() {
     return {
       id: {
@@ -14,26 +14,21 @@ class PoolModel extends Model {
         type: DataTypes.STRING,
         validate: { notEmpty: true },
       },
-      description: {
-        type: DataTypes.STRING,
-      },
       length: {
         type: DataTypes.FLOAT,
       },
       width: {
         type: DataTypes.FLOAT,
       },
-      depth: {
+      weight: {
         type: DataTypes.FLOAT,
       },
-      volume: {
-        type: DataTypes.FLOAT,
+      spawnDate: {
+        type: DataTypes.DATE,
       },
-      count: {
-        type: DataTypes.INTEGER,
-      },
-      countKg: {
-        type: DataTypes.FLOAT,
+      data: {
+        type: DataTypes.JSONB,
+        defaultValue: {},
       },
       // Define timestamp fields explicitly to preserve camelCase in code
       createdAt: {
@@ -47,17 +42,13 @@ class PoolModel extends Model {
       },
     };
   }
-  static associate({ PoolType, Generation, GenerationPool }) {
-    this.belongsTo(PoolType, {
-      as: 'type',
-      foreignKey: { name: 'poolTypeId', field: 'pool_type_id', allowNull: false },
-    });
-    this.belongsToMany(Generation, {
-      as: 'generations',
+  static associate({ Pool, GenerationPool }) {
+    this.belongsToMany(Pool, {
+      as: 'pools',
       through: { model: GenerationPool, unique: false },
-      foreignKey: { name: 'poolId', field: 'pool_id' },
+      foreignKey: { name: 'generationId', field: 'generation_id' },
     });
   }
 }
 
-module.exports = PoolModel;
+module.exports = GenerationModel;
