@@ -5,10 +5,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Home from '~/home';
-import Login from '~/auth/login';
-import Pool from '~/pool/pool-main.vue';
-import PoolView from '~/pool/pool-view.vue';
+import GenerationMain from '~/generation/generation-main';
+import HomeMain from '~/home';
+import LoginMain from '~/auth/login';
+import PoolMain from '~/pool/pool-main';
+import PoolView from '~/pool/pool-view';
 
 Vue.use(Router);
 
@@ -18,19 +19,23 @@ export function createRouter() {
     routes: [
       {
         path: '/',
-        component: Home,
+        component: HomeMain,
       },
       {
         path: '/login',
-        component: Login,
+        component: LoginMain,
       },
       {
         path: '/bazeni/:type',
-        component: Pool,
+        component: PoolMain,
         children: [{
           path: ':id',
           component: PoolView,
         }],
+      },
+      {
+        path: '/generacije',
+        component: GenerationMain,
       },
       {
         path: '*',
