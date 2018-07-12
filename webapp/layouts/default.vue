@@ -86,7 +86,7 @@ export default {
       links: [
         { icon: 'apps', title: 'Početna', to: '/' },
         {
-          icon: 'crop_landscape',
+          icon: 'mdi-waves',
           title: 'Bazeni',
           subLinks: [
             { title: 'Veliki bazeni', to: { path: '/bazeni/BV' } },
@@ -95,8 +95,9 @@ export default {
             { title: 'Kanali', to: { path: '/bazeni/K' } },
           ],
         },
+        { icon: 'mdi-fish', title: 'Generacije', to: '/generacije' },
       ],
-      title: 'Vuetify.js'
+      title: 'The Black Project'
     };
   },
   methods: {
