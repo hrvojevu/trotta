@@ -4,28 +4,28 @@ const generationService = require('./generationService');
 
 async function list(req, res) {
   const includePools = req.query.pools === 'true';
-  const pools = await generationService.list(includePools);
+  const generations = await generationService.list(includePools);
 
-  res.json(pools);
+  res.json(generations);
 }
 
 async function get(req, res) {
   const includePools = req.query.pools === 'true';
-  const pool = await generationService.get(req.params.id, includePools);
+  const generation = await generationService.get(req.params.id, includePools);
 
-  res.json(pool);
+  res.json(generation);
 }
 
 async function create(req, res) {
-  const pool = await generationService.create(req.body);
+  const generation = await generationService.create(req.body);
 
-  res.json(pool);
+  res.json(generation);
 }
 
 async function patch(req, res) {
-  const pool = await generationService.patch(req.params.id, req.body);
+  const generation = await generationService.patch(req.params.id, req.body);
 
-  res.json(pool);
+  res.json(generation);
 }
 
 async function remove(req, res) {

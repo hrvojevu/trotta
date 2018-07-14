@@ -15,12 +15,12 @@ function get(id, pools = false) {
   });
 }
 
-function create(pool) {
-  return GenerationModel.create(pool);
+function create(generation) {
+  return GenerationModel.create(generation);
 }
 
-function patch(id, pool) {
-  return GenerationModel.update(pool, {
+function patch(id, generation) {
+  return GenerationModel.update(generation, {
     returning: true,
     where: { id },
   });
