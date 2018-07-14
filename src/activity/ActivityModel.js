@@ -29,6 +29,12 @@ class ActivityModel extends Model {
       },
     };
   }
+  static associate({ Log }) {
+    this.hasMany(Log, {
+      as: 'logs',
+      foreignKey: { name: 'activityId', field: 'activity_id', allowNull: false },
+    });
+  }
 }
 
 module.exports = ActivityModel;

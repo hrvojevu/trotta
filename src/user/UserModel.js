@@ -46,6 +46,12 @@ class UserModel extends Model {
       },
     };
   }
+  static associate({ Log }) {
+    this.hasMany(Log, {
+      as: 'logs',
+      foreignKey: { name: 'userId', field: 'user_id', allowNull: false },
+    });
+  }
 }
 
 module.exports = UserModel;

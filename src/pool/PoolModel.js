@@ -47,7 +47,7 @@ class PoolModel extends Model {
       },
     };
   }
-  static associate({ PoolType, Generation, GenerationPool }) {
+  static associate({ PoolType, Generation, GenerationPool, Log }) {
     this.belongsTo(PoolType, {
       as: 'type',
       foreignKey: { name: 'poolTypeId', field: 'pool_type_id', allowNull: false },
@@ -56,6 +56,14 @@ class PoolModel extends Model {
       as: 'generations',
       through: { model: GenerationPool, unique: false },
       foreignKey: { name: 'poolId', field: 'pool_id' },
+    });
+    this.hasMany(Log, {
+      as: 'sourceLogs',
+      foreignKey: { name: 'sourcePoolId', field: 'source_pool_id', allowNull: false },
+    });
+    this.hasMany(Log, {
+      as: 'destinationLogs',
+      foreignKey: { name: 'destinationPoolId', field: 'destination_pool_id', allowNull: true },
     });
   }
 }
