@@ -5,6 +5,7 @@
  * name should be in the same parent directory.
  */
 const tableNames = [
+  'activity',
   'user',
   'pool_type',
   'pool',
