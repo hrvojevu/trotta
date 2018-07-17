@@ -44,6 +44,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '@/plugins/date-fns',
     '@/plugins/vee-validate',
     '@/plugins/vuetify',
   ],
