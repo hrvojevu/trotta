@@ -6,6 +6,7 @@
  */
 const tableNames = [
   'activity',
+  'generation',
   'user',
   'pool_type',
   'pool',
