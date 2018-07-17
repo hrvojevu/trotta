@@ -10,6 +10,7 @@ import HomeMain from '~/home';
 import LoginMain from '~/auth/login';
 import PoolMain from '~/pool/pool-main';
 import PoolView from '~/pool/pool-view';
+import SpawnMain from '~/spawn/spawn-main';
 
 Vue.use(Router);
 
@@ -36,6 +37,10 @@ export function createRouter() {
       {
         path: '/generacije',
         component: GenerationMain,
+      },
+      {
+        path: '/mrijest',
+        component: SpawnMain,
       },
       {
         path: '*',

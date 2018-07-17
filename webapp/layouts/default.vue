@@ -96,6 +96,7 @@ export default {
           ],
         },
         { icon: 'mdi-fish', title: 'Generacije', to: '/generacije' },
+        { icon: 'rotate_right', title: 'Mrijest', to: '/mrijest' },
       ],
       title: 'The Black Project'
     };
