@@ -1,4 +1,4 @@
-const auth = {
+const generationStore = {
   namespaced: true,
   state: {
     generations: [],
@@ -8,7 +8,7 @@ const auth = {
   },
   actions: {
     async list({ commit }) {
-      const generations = await this.$axios.$get('/generations');
+      const generations = await this.$axios.$get('/generations?pools=true');
 
       commit('set', generations);
     },
@@ -20,4 +20,4 @@ const auth = {
   }
 };
 
-export default auth;
+export default generationStore;
