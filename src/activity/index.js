@@ -7,7 +7,7 @@ const activityController = require('./activityController');
 router
   .get('/', activityController.list)
   .get('/:id', activityController.get)
-  .post('/:id', activityController.create)
+  .post('/', activityController.create)
   .patch('/:id', activityController.patch)
   .delete('/:id', activityController.remove);
 

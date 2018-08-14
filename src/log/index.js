@@ -7,7 +7,7 @@ const logController = require('./logController');
 router
   .get('/', logController.list)
   .get('/:id', logController.get)
-  .post('/:id', logController.create);
+  .post('/', logController.create);
 
 
 module.exports = { router };

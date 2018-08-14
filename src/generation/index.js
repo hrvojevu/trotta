@@ -7,7 +7,7 @@ const generationController = require('./generationController');
 router
   .get('/', generationController.list)
   .get('/:id', generationController.get)
-  .post('/:id', generationController.create)
+  .post('/', generationController.create)
   .patch('/:id', generationController.patch)
   .delete('/:id', generationController.remove);
 

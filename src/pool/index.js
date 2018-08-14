@@ -12,7 +12,7 @@ router
   .delete('/types/:id', poolTypeController.remove)
   .get('/', poolController.list)
   .get('/:id', poolController.get)
-  .post('/:id', poolController.create)
+  .post('/', poolController.create)
   .patch('/:id', poolController.patch)
   .delete('/:id', poolController.remove);
 
