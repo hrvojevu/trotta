@@ -12,10 +12,18 @@ const generationStore = {
 
       commit('set', generations);
     },
+    async create({ commit }, generation) {
+      const data = await this.$axios.$post('/generations', generation);
+
+      commit('create', data);
+    },
   },
   mutations: {
     set: (state, generations) => {
       state.generations = generations;
+    },
+    create: (state, generation) => {
+      state.generations.push(generation);
     },
   }
 };
