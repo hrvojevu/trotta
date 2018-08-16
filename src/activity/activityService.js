@@ -14,11 +14,13 @@ function create(activity) {
   return ActivityModel.create(activity);
 }
 
-function patch(id, activity) {
-  return ActivityModel.update(activity, {
+async function patch(id, activity) {
+  const [, [updated]] = await ActivityModel.update(activity, {
     returning: true,
     where: { id },
   });
+
+  return updated;
 }
 
 function remove(id) {

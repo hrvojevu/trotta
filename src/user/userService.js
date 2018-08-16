@@ -14,11 +14,13 @@ function create(user) {
   return UserModel.create(user);
 }
 
-function patch(id, user) {
-  return UserModel.update(user, {
+async function patch(id, user) {
+  const [, [updated]] = await UserModel.update(user, {
     returning: true,
     where: { id },
   });
+
+  return updated;
 }
 
 function remove(id) {

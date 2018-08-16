@@ -19,11 +19,13 @@ function create(generation) {
   return GenerationModel.create(generation);
 }
 
-function patch(id, generation) {
-  return GenerationModel.update(generation, {
+async function patch(id, generation) {
+  const [, [updated]] = await GenerationModel.update(generation, {
     returning: true,
     where: { id },
   });
+
+  return updated;
 }
 
 function remove(id) {

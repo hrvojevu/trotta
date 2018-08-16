@@ -28,11 +28,13 @@ function create(pool) {
   return PoolModel.create(pool);
 }
 
-function patch(id, pool) {
-  return PoolModel.update(pool, {
+async function patch(id, pool) {
+  const [, [updated]] = await PoolModel.update(pool, {
     returning: true,
     where: { id },
   });
+
+  return updated;
 }
 
 function remove(id) {
