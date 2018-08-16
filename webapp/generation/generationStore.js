@@ -17,6 +17,11 @@ const generationStore = {
 
       commit('create', data);
     },
+    async update({ commit }, generation) {
+      const data = await this.$axios.$patch(`/generations/${generation.id}`, generation);
+
+      commit('update', data);
+    },
   },
   mutations: {
     set: (state, generations) => {
@@ -24,6 +29,10 @@ const generationStore = {
     },
     create: (state, generation) => {
       state.generations.push(generation);
+    },
+    update: (state, generation) => {
+      const index = state.generations.findIndex((g) => g.id === generation.id);
+      state.generations.splice(index, 1, generation);
     },
   }
 };
