@@ -7,12 +7,19 @@
     <template slot="items" slot-scope="props">
       <td>{{ props.item.spawnDate | format }}</td>
       <td class="text-xs-center">
-        <v-chip color="primary" text-color="white">{{ props.item.name }}</v-chip>
+        <v-chip
+          @click="$emit('editGeneration', props.item)"
+          color="primary"
+          text-color="white"
+          class="name-chip"
+        >
+          {{ props.item.name }}
+        </v-chip>
       </td>
       <td class="text-xs-center">{{ props.item.picked }}</td>
       <td class="text-xs-center">{{ props.item.trash }}</td>
-      <td class="text-xs-center">{{ props.item.badRoe }}</td>
       <td class="text-xs-center">{{ props.item.goodRoe }}</td>
+      <td class="text-xs-center">{{ props.item.badRoe }}</td>
       <td class="text-xs-center">{{ props.item.verticalIncubators }}</td>
       <td class="text-xs-center">{{ props.item.horizontalIncubators }}</td>
     </template>
@@ -38,8 +45,8 @@ export default {
         { text: 'Ime Generacije', value: 'name', align: 'center' },
         { text: 'Odabrano', value: 'picked', align: 'center' },
         { text: 'Škart', value: 'trash', align: 'center' },
-        { text: 'Dobra Ikra', value: 'badRoe', align: 'center' },
-        { text: 'Loša ikra', value: 'goodRoe', align: 'center' },
+        { text: 'Dobra Ikra', value: 'goodRoe', align: 'center' },
+        { text: 'Loša ikra', value: 'badRoe', align: 'center' },
         { text: 'Vert. Inkubatori', value: 'verticalIncubators', align: 'center' },
         { text: 'Horiz. Inkubatori', value: 'horizontalIncubators', align: 'center' },
       ],
@@ -47,3 +54,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.name-chip /deep/ {
+  span {
+    cursor: pointer;
+  }
+}
+</style>

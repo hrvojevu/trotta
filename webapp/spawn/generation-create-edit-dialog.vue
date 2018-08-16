@@ -1,0 +1,252 @@
+<template>
+  <v-dialog
+    v-model="dialog"
+    persistent
+    max-width="500"
+  >
+    <v-card>
+      <v-card-title class="headline">
+        {{ generation.id ? `Izmjeni Generaciju - ${generation.name}` : 'Dodaj Generaciju' }}
+      </v-card-title>
+      <v-card-text>
+        <v-layout wrap>
+          <v-alert
+            :value="error"
+            color="warning"
+            icon="priority_high"
+            transition="scale-transition"
+            class="pa-2"
+          >
+            {{ error }}
+          </v-alert>
+          <v-flex xs12>
+            <v-menu
+              ref="spawnDateMenu"
+              :close-on-content-click="false"
+              v-model="spawnDateMenu"
+              :return-value.sync="generation.spawnDate"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            >
+              <v-text-field
+                v-validate="'required'"
+                v-model="formattedSpawnDate"
+                :error-messages="errors.collect('spawnDate')"
+                data-vv-name="spawnDate"
+                slot="activator"
+                label="Datum Mrijesta"
+                append-icon="event"
+                readonly
+              />
+              <v-date-picker
+                v-model="generation.spawnDate"
+                no-title
+                @input="$refs.spawnDateMenu.save(generation.spawnDate)"/>
+            </v-menu>
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-validate="'required'"
+              v-model="generation.data.picked"
+              :error-messages="errors.collect('picked')"
+              label="Odabrano"
+              data-vv-name="picked"
+              class="pr-2"
+              type="number"
+            />
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-validate="'required'"
+              v-model="generation.data.trash"
+              :error-messages="errors.collect('trash')"
+              label="Škart"
+              data-vv-name="trash"
+              class="pl-2"
+              type="number"
+            />
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-validate="'required'"
+              v-model="generation.data.goodRoe"
+              :error-messages="errors.collect('goodRoe')"
+              label="Dobra Ikra"
+              data-vv-name="goodRoe"
+              class="pr-2"
+              type="number"
+            />
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-validate="'required'"
+              v-model="generation.data.badRoe"
+              :error-messages="errors.collect('badRoe')"
+              label="Loša Ikra"
+              data-vv-name="badRoe"
+              class="pl-2"
+              type="number"
+            />
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="generation.data.verticalIncubators"
+              :error-messages="errors.collect('verticalIncubators')"
+              label="Vertikalni Inkubatori"
+              data-vv-name="verticalIncubators"
+              type="number"
+              class="pr-2"
+            />
+          </v-flex>
+          <v-flex xs6>
+            <v-text-field
+              v-model="generation.data.horizontalIncubators"
+              :error-messages="errors.collect('horizontalIncubators')"
+              label="Horizontalni Inkubatori"
+              data-vv-name="horizontalIncubators"
+              type="number"
+              class="pl-2"
+            />
+          </v-flex>
+        </v-layout>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer/>
+        <v-btn
+          color="primary"
+          flat="flat"
+          @click="$emit('close')"
+        >
+          Odustani
+        </v-btn>
+        <v-btn
+          v-if="confirmSubmit"
+          color="primary"
+          flat="flat"
+          @click="submit"
+        >
+          Potvrdi
+        </v-btn>
+        <v-btn
+          v-else
+          color="primary"
+          flat="flat"
+          @click="validateSubmit"
+        >
+          Spremi
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+import { format } from 'date-fns';
+import { cloneDeep } from 'lodash';
+import { mapActions } from 'vuex';
+
+export default {
+  $_veeValidate: {
+    validator: 'new'
+  },
+  props: {
+    dialog: {
+      type: Boolean,
+      default: false,
+    },
+    generationProp: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  data() {
+    return {
+      generation: {
+        data: {},
+        spawnDate: format(new Date(), 'YYYY-MM-DD'),
+        ...cloneDeep(this.generationProp)
+      },
+      confirmSubmit: false,
+      spawnDateMenu: false,
+      dictionary: {
+        messages: {
+          required: 'Polje ne smije biti prazno'
+        },
+      },
+      error: '',
+    };
+  },
+  computed: {
+    formattedSpawnDate() {
+      return this.formatDate(this.generation.spawnDate);
+    },
+  },
+  mounted() {
+    this.$validator.localize('hr', this.dictionary);
+  },
+  methods: {
+    ...mapActions('generation', ['create', 'update']),
+    formatDate(value) {
+      return format(value, 'DD.MM.YYYY.');
+    },
+    createGenerationName() {
+      const [day, month, year] = this.formatDate(this.generation.spawnDate).split('.');
+
+      return `G${day}${month}${year.slice(-2)}`;
+    },
+    convertGenerationDataToInt() {
+      const keys = Object.keys(this.generation.data);
+
+      keys.forEach((key) => {
+        this.generation.data[key] = parseInt(this.generation.data[key], 10);
+      });
+    },
+    verifyData() {
+      const picked = this.generation.data.trash
+        + this.generation.data.goodRoe
+        + this.generation.data.badRoe;
+
+      return this.generation.data.picked !== picked;
+    },
+    async validateSubmit() {
+      this.confirmSubmit = false;
+
+      const valid = await this.$validator.validateAll();
+
+      if (!valid) {
+        return false;
+      }
+
+      this.convertGenerationDataToInt();
+
+      if (this.verifyData()) {
+        this.error = 'Zbroj polja škart, dobra ikra i loša ikra mora odgovarati broju polja \'odabrano\'.';
+        return false;
+      }
+
+      this.confirmSubmit = true;
+      this.error = '';
+
+      return true;
+    },
+    async submit() {
+      const valid = await this.validateSubmit();
+
+      if (!valid) {
+        return;
+      }
+
+      if (this.generation.id) {
+        await this.update({ ...this.generation, name: this.createGenerationName() });
+      } else {
+        await this.create({ ...this.generation, name: this.createGenerationName() });
+      }
+
+      this.$emit('close');
+    },
+  },
+};
+</script>
