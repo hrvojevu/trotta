@@ -12,24 +12,24 @@
         <v-layout wrap>
           <v-alert
             :value="error"
+            class="pa-2"
             color="warning"
             icon="priority_high"
             transition="scale-transition"
-            class="pa-2"
           >
             {{ error }}
           </v-alert>
           <v-flex xs12>
             <v-menu
               ref="spawnDateMenu"
-              :close-on-content-click="false"
               v-model="spawnDateMenu"
+              :close-on-content-click="false"
               :return-value.sync="generation.spawnDate"
-              lazy
               transition="scale-transition"
-              offset-y
-              full-width
               min-width="290px"
+              full-width
+              offset-y
+              lazy
             >
               <v-text-field
                 v-validate="'required'"
@@ -40,6 +40,7 @@
                 label="Datum Mrijesta"
                 append-icon="event"
                 readonly
+                box
               />
               <v-date-picker
                 v-model="generation.spawnDate"
@@ -52,10 +53,11 @@
               v-validate="'required'"
               v-model.number="generation.data.picked"
               :error-messages="errors.collect('picked')"
-              label="Odabrano"
               data-vv-name="picked"
               class="pr-2"
+              label="Odabrano"
               type="number"
+              box
             />
           </v-flex>
           <v-flex xs6>
@@ -63,10 +65,11 @@
               v-validate="'required'"
               v-model.number="generation.data.trash"
               :error-messages="errors.collect('trash')"
-              label="Škart"
               data-vv-name="trash"
               class="pl-2"
+              label="Škart"
               type="number"
+              box
             />
           </v-flex>
           <v-flex xs6>
@@ -74,10 +77,11 @@
               v-validate="'required'"
               v-model.number="generation.data.goodRoe"
               :error-messages="errors.collect('goodRoe')"
-              label="Dobra Ikra"
               data-vv-name="goodRoe"
               class="pr-2"
+              label="Dobra Ikra"
               type="number"
+              box
             />
           </v-flex>
           <v-flex xs6>
@@ -85,30 +89,33 @@
               v-validate="'required'"
               v-model.number="generation.data.badRoe"
               :error-messages="errors.collect('badRoe')"
-              label="Loša Ikra"
               data-vv-name="badRoe"
               class="pl-2"
+              label="Loša Ikra"
               type="number"
+              box
             />
           </v-flex>
           <v-flex xs6>
             <v-text-field
               v-model.number="generation.data.verticalIncubators"
               :error-messages="errors.collect('verticalIncubators')"
-              label="Vertikalni Inkubatori"
               data-vv-name="verticalIncubators"
-              type="number"
               class="pr-2"
+              label="Vertikalni Inkubatori"
+              type="number"
+              box
             />
           </v-flex>
           <v-flex xs6>
             <v-text-field
               v-model.number="generation.data.horizontalIncubators"
               :error-messages="errors.collect('horizontalIncubators')"
-              label="Horizontalni Inkubatori"
               data-vv-name="horizontalIncubators"
-              type="number"
               class="pl-2"
+              label="Horizontalni Inkubatori"
+              type="number"
+              box
             />
           </v-flex>
         </v-layout>
