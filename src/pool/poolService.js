@@ -29,10 +29,10 @@ function create(pool) {
 }
 
 async function patch(id, pool) {
-  const [, [updated]] = await PoolModel.update(pool, {
-    returning: true,
-    where: { id },
-  });
+  await PoolModel.update(pool, { where: { id } });
+
+  // Additional query is made since we can not include associations when returning updated field
+  const updated = await get(id, true);
 
   return updated;
 }
