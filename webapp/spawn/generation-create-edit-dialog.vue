@@ -50,7 +50,7 @@
           <v-flex xs6>
             <v-text-field
               v-validate="'required'"
-              v-model="generation.data.picked"
+              v-model.number="generation.data.picked"
               :error-messages="errors.collect('picked')"
               label="Odabrano"
               data-vv-name="picked"
@@ -61,7 +61,7 @@
           <v-flex xs6>
             <v-text-field
               v-validate="'required'"
-              v-model="generation.data.trash"
+              v-model.number="generation.data.trash"
               :error-messages="errors.collect('trash')"
               label="Škart"
               data-vv-name="trash"
@@ -72,7 +72,7 @@
           <v-flex xs6>
             <v-text-field
               v-validate="'required'"
-              v-model="generation.data.goodRoe"
+              v-model.number="generation.data.goodRoe"
               :error-messages="errors.collect('goodRoe')"
               label="Dobra Ikra"
               data-vv-name="goodRoe"
@@ -83,7 +83,7 @@
           <v-flex xs6>
             <v-text-field
               v-validate="'required'"
-              v-model="generation.data.badRoe"
+              v-model.number="generation.data.badRoe"
               :error-messages="errors.collect('badRoe')"
               label="Loša Ikra"
               data-vv-name="badRoe"
@@ -93,7 +93,7 @@
           </v-flex>
           <v-flex xs6>
             <v-text-field
-              v-model="generation.data.verticalIncubators"
+              v-model.number="generation.data.verticalIncubators"
               :error-messages="errors.collect('verticalIncubators')"
               label="Vertikalni Inkubatori"
               data-vv-name="verticalIncubators"
@@ -103,7 +103,7 @@
           </v-flex>
           <v-flex xs6>
             <v-text-field
-              v-model="generation.data.horizontalIncubators"
+              v-model.number="generation.data.horizontalIncubators"
               :error-messages="errors.collect('horizontalIncubators')"
               label="Horizontalni Inkubatori"
               data-vv-name="horizontalIncubators"
@@ -197,13 +197,6 @@ export default {
 
       return `G${day}${month}${year.slice(-2)}`;
     },
-    convertGenerationDataToInt() {
-      const keys = Object.keys(this.generation.data);
-
-      keys.forEach((key) => {
-        this.generation.data[key] = parseInt(this.generation.data[key], 10);
-      });
-    },
     verifyData() {
       const picked = this.generation.data.trash
         + this.generation.data.goodRoe
@@ -219,8 +212,6 @@ export default {
       if (!valid) {
         return false;
       }
-
-      this.convertGenerationDataToInt();
 
       if (this.verifyData()) {
         this.error = 'Zbroj polja škart, dobra ikra i loša ikra mora odgovarati broju polja \'odabrano\'.';
