@@ -8,6 +8,9 @@ const session = require('./session');
 const settings = require('./settings');
 
 exports.default = {
+  api: {
+    endpoint: '/api',
+  },
   cors: cors.default,
   middleware: middleware.default,
   session: session.default,
@@ -16,7 +19,6 @@ exports.default = {
 
 exports.development = {
   api: {
-    endpoint: '/api',
     uri: defer(({ app: { hostname, port, api: { endpoint } } }) => `http://${hostname}:${port}${endpoint}`),
   },
   hostname: '0.0.0.0',
@@ -25,4 +27,14 @@ exports.development = {
   middleware: middleware.development,
   session: session.development,
   settings: settings.development,
+};
+
+exports.production = {
+  api: {
+    uri: defer(({ app: { url, api: { endpoint } } }) => `${url}${endpoint}`),
+  },
+  cors: cors.production,
+  middleware: middleware.production,
+  session: session.production,
+  settings: settings.production,
 };

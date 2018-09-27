@@ -9,3 +9,5 @@ exports.default = {
 exports.development = {
   secret: '378e56fc949159c7db57153df46c4978',
 };
+
+exports.production = {};

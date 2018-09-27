@@ -10,3 +10,5 @@ exports.default = {
 };
 
 exports.development = {};
+
+exports.production = {};
