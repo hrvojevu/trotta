@@ -1,6 +1,7 @@
 {
   "app": {
     "hostname": "HOST",
+    "port": "PORT",
     "url": "APP_URL",
     "session": {
       "secret": "APP_SESN_SECRET"
