@@ -4,13 +4,9 @@
     "url": "APP_URL",
     "session": {
       "secret": "APP_SESN_SECRET"
-    },
-    "dataStore": {
-      "user": "DB_USER",
-      "password": "DB_PASSWORD",
-      "host": "DB_HOST",
-      "port": "DB_PORT",
-      "name": "DB_NAME"
     }
+  },
+  "dataStore": {
+    "uri": "DATABASE_URL"
   }
 }

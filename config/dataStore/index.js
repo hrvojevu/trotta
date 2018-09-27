@@ -2,8 +2,6 @@
 
 const path = require('path');
 
-const { deferConfig: defer } = require('config/defer');
-
 const PROJECT_ROOT = path.resolve(__dirname, '../../');
 
 exports.default = {
@@ -39,5 +37,4 @@ exports.production = {
   options: {
     schema: 'public',
   },
-  uri: defer(({ dataStore: { user, password, host, port, name } }) => `postgres://${user}:${password}@${host}:${port}/${name}`),
 };

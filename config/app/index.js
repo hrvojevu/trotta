@@ -33,6 +33,7 @@ exports.production = {
   api: {
     uri: defer(({ app: { url, api: { endpoint } } }) => `${url}${endpoint}`),
   },
+  port: 3000,
   cors: cors.production,
   middleware: middleware.production,
   session: session.production,
