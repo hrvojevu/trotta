@@ -18,7 +18,7 @@ for (let i = 0; i < 20; i++) {
   });
 }
 
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 21; i++) {
   pools.push({
     id: uuidv4(),
     name: `Predbazen mali ${i + 1}`,
@@ -28,7 +28,7 @@ for (let i = 0; i < 8; i++) {
   });
 }
 
-for (let i = 0; i < 21; i++) {
+for (let i = 0; i < 8; i++) {
   pools.push({
     id: uuidv4(),
     name: `Predbazen veliki ${i + 1}`,
