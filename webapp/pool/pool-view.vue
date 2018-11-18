@@ -8,7 +8,7 @@
             flat
             icon
             color="primary"
-            @click.stop="isPoolDialogShown = true"
+            @click.stop="showDialog"
           >
             <v-icon>settings</v-icon>
           </v-btn>
@@ -24,13 +24,15 @@
       v-if="isPoolDialogShown"
       :dialog="isPoolDialogShown"
       :pool-prop="pool"
-      @close="isPoolDialogShown = false"
+      :pool-types="types"
+      @close="closeDialog"
+      @submit="submitPool"
     />
   </v-layout>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 import PoolCreateEditDialog from './pool-create-edit-dialog';
 
@@ -44,9 +46,28 @@ export default {
     };
   },
   computed: {
+    ...mapState('pool', ['types']),
     ...mapGetters('pool', ['getById']),
     pool() {
       return this.getById.get(this.$route.params.id);
+    },
+  },
+  methods: {
+    ...mapActions('pool', ['create', 'update']),
+    showDialog() {
+      this.isPoolDialogShown = true;
+    },
+    closeDialog() {
+      this.isPoolDialogShown = false;
+    },
+    async submitPool(pool) {
+      if (pool.id) {
+        await this.update(pool);
+      } else {
+        await this.create(pool);
+      }
+
+      this.isPoolDialogShown = false;
     },
   },
 };
