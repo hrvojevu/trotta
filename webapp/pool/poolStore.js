@@ -43,6 +43,11 @@ const poolStore = {
 
       commit('update', res);
     },
+    async remove({ commit }, id) {
+      await this.$axios.$delete(`/pools/${id}`);
+
+      commit('remove', id);
+    },
   },
   mutations: {
     set: (state, pools) => {
@@ -57,6 +62,10 @@ const poolStore = {
     update: (state, pool) => {
       const index = state.pools.findIndex((p) => p.id === pool.id);
       state.pools.splice(index, 1, pool);
+    },
+    remove: (state, id) => {
+      const index = state.pools.findIndex((p) => p.id === id);
+      state.pools.splice(index, 1);
     },
   }
 };
