@@ -25,7 +25,7 @@
               v-model="pool.poolTypeId"
               v-validate="'required'"
               :error-messages="errors.collect('poolTypeId')"
-              :items="types"
+              :items="poolTypes"
               label="Tip"
               data-vv-name="poolTypeId"
               item-text="name"
@@ -99,7 +99,6 @@
 
 <script>
 import { cloneDeep } from 'lodash';
-import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   $_veeValidate: {
@@ -114,6 +113,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    poolTypes: {
+      type: Array,
+      default: () => ([]),
+    },
   },
   data() {
     return {
@@ -127,18 +130,10 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapGetters('pool', ['getTypeByCode']),
-    ...mapState('pool', ['types']),
-    poolTypes() {
-      return this.types.map((t) => t.name);
-    },
-  },
   mounted() {
     this.$validator.localize('hr', this.dictionary);
   },
   methods: {
-    ...mapActions('pool', ['create', 'update']),
     async validateSubmit() {
       this.isSubmitConfirmed = false;
 
@@ -159,13 +154,7 @@ export default {
         return;
       }
 
-      if (this.pool.id) {
-        await this.update(this.pool);
-      } else {
-        await this.create(this.pool);
-      }
-
-      this.$emit('close');
+      this.$emit('submit', this.pool);
     },
   },
 };

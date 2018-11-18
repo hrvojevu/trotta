@@ -34,13 +34,15 @@
     <pool-create-edit-dialog
       v-if="isPoolDialogShown"
       :dialog="isPoolDialogShown"
-      @close="isPoolDialogShown = false"
+      :pool-types="types"
+      @close="closeDialog"
+      @submit="submitPool"
     />
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 import PoolCreateEditDialog from './pool-create-edit-dialog';
 import PoolDatatable from './pool-datatable';
@@ -63,9 +65,25 @@ export default {
     };
   },
   computed: {
+    ...mapState('pool', ['types']),
     ...mapGetters('pool', ['poolsByType']),
     pools() {
       return this.poolsByType.get(this.$route.params.type);
+    },
+  },
+  methods: {
+    ...mapActions('pool', ['create', 'update']),
+    async submitPool(pool) {
+      if (pool.id) {
+        await this.update(pool);
+      } else {
+        await this.create(pool);
+      }
+
+      this.isPoolDialogShown = false;
+    },
+    closeDialog() {
+      this.isPoolDialogShown = false;
     },
   },
 };
