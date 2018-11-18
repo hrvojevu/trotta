@@ -153,7 +153,6 @@
 <script>
 import { format } from 'date-fns';
 import { cloneDeep } from 'lodash';
-import { mapActions } from 'vuex';
 
 export default {
   $_veeValidate: {
@@ -195,7 +194,6 @@ export default {
     this.$validator.localize('hr', this.dictionary);
   },
   methods: {
-    ...mapActions('generation', ['create', 'update']),
     formatDate(value) {
       return format(value, 'DD.MM.YYYY.');
     },
@@ -237,13 +235,7 @@ export default {
         return;
       }
 
-      if (this.generation.id) {
-        await this.update({ ...this.generation, name: this.createGenerationName() });
-      } else {
-        await this.create({ ...this.generation, name: this.createGenerationName() });
-      }
-
-      this.$emit('close');
+      this.$emit('submit', { ...this.generation, name: this.createGenerationName() });
     },
   },
 };

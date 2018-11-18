@@ -1,17 +1,18 @@
 <template>
   <v-container fluid>
     <v-btn
-      @click="dialog=true"
+      @click="showDialog"
       fab
       color="primary"
     >
       <v-icon dark>add</v-icon>
     </v-btn>
     <generation-create-edit-dialog
-      v-if="dialog"
-      :dialog="dialog"
+      v-if="isGenerationDialogShown"
+      :dialog="isGenerationDialogShown"
       :generation-prop="generationToEdit"
       @close="closeDialog"
+      @submit="submitGeneration"
     />
     <v-card>
       <v-card-text>
@@ -34,14 +35,14 @@
 <script>
 import { isAfter, isBefore, getYear } from 'date-fns';
 import { uniq } from 'lodash';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import GenerationCreateEditDialog from './generation-create-edit-dialog';
 import SpawnDatatable from './spawn-datatable';
 
 export default {
   async fetch({ app, store }) {
-    const generations = await app.$axios.$get('/generations');
+    const generations = await app.$axios.$get('/generations?pools=true');
 
     store.commit('generation/set', generations);
   },
@@ -51,7 +52,7 @@ export default {
   },
   data() {
     return {
-      dialog: false,
+      isGenerationDialogShown: false,
       generationToEdit: undefined,
       selectedYear: undefined,
     };
@@ -71,13 +72,26 @@ export default {
     },
   },
   methods: {
+    ...mapActions('generation', ['create', 'update']),
     editGeneration(generation) {
       this.generationToEdit = generation;
-      this.dialog = true;
+      this.isGenerationDialogShown = true;
     },
     closeDialog() {
-      this.dialog = false;
+      this.isGenerationDialogShown = false;
       this.generationToEdit = undefined;
+    },
+    showDialog() {
+      this.isGenerationDialogShown = true;
+    },
+    async submitGeneration(generation) {
+      if (generation.id) {
+        await this.update(generation);
+      } else {
+        await this.create(generation);
+      }
+
+      this.isGenerationDialogShown = false;
     },
   },
 };
