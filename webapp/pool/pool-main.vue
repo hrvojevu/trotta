@@ -13,7 +13,7 @@
       </v-flex>
       <v-flex xs12>
         <v-btn
-          @click="isPoolDialogShown = true"
+          @click="showDialog"
           fab
           color="primary"
         >
@@ -84,6 +84,9 @@ export default {
     },
     closeDialog() {
       this.isPoolDialogShown = false;
+    },
+    showDialog() {
+      this.isPoolDialogShown = true;
     },
   },
 };
