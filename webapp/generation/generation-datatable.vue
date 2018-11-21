@@ -8,7 +8,7 @@
         <v-chip color="primary" text-color="white">{{ props.item.name }}</v-chip>
       </td>
       <td class="text-xs-center">
-        <span v-if="!props.item.pools.lenght">-</span>
+        <span v-if="!props.item.pools.length">-</span>
         <span
           v-else
           v-for="pool in props.item.pools"
