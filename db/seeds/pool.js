@@ -13,8 +13,8 @@ for (let i = 0; i < 20; i++) {
     id: uuidv4(),
     name: `Bazen veliki ${i + 1}`,
     pool_type_id: types.find((t) => t.code === 'BV').id,
-    updated_at: '2018-07-01',
-    created_at: '2018-07-01',
+    updated_at: `2018-07-01 00:00:${i}`,
+    created_at: `2018-07-01 00:00:${i}`,
   });
 }
 
@@ -23,8 +23,8 @@ for (let i = 0; i < 21; i++) {
     id: uuidv4(),
     name: `Predbazen mali ${i + 1}`,
     pool_type_id: types.find((t) => t.code === 'PBM').id,
-    updated_at: '2018-07-01',
-    created_at: '2018-07-01',
+    updated_at: `2018-07-01 00:01:${i}`,
+    created_at: `2018-07-01 00:01:${i}`,
   });
 }
 
@@ -33,8 +33,8 @@ for (let i = 0; i < 8; i++) {
     id: uuidv4(),
     name: `Predbazen veliki ${i + 1}`,
     pool_type_id: types.find((t) => t.code === 'PBV').id,
-    updated_at: '2018-07-01',
-    created_at: '2018-07-01',
+    updated_at: `2018-07-01 00:02:${i}`,
+    created_at: `2018-07-01 00:02:${i}`,
   });
 }
 
@@ -43,8 +43,8 @@ for (let i = 0; i < 3; i++) {
     id: uuidv4(),
     name: `Kanal ${i + 1}`,
     pool_type_id: types.find((t) => t.code === 'K').id,
-    updated_at: '2018-07-01',
-    created_at: '2018-07-01',
+    updated_at: `2018-07-01 00:03:${i}`,
+    created_at: `2018-07-01 00:03:${i}`,
   });
 }
 
