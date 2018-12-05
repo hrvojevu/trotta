@@ -3,6 +3,8 @@
     :headers="headers"
     :items="pools"
     :pagination.sync="pagination"
+    no-data-text="Nema dostupnih podataka"
+    no-results-text="Nema dostupnih podataka"
   >
     <template slot="items" slot-scope="props">
       <td>{{ props.item.name }}</td>
