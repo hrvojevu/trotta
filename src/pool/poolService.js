@@ -1,6 +1,8 @@
 'use strict';
 
+const dataStore = require('../dataStore');
 const GenerationModel = require('../generation/GenerationModel');
+const GenerationPoolModel = require('../generation/GenerationPoolModel');
 const PoolModel = require('./PoolModel');
 const PoolTypeModel = require('./PoolTypeModel');
 
@@ -11,7 +13,7 @@ function list(generations = false) {
     include.push({ model: GenerationModel, as: 'generations' });
   }
 
-  return PoolModel.findAll({ include });
+  return PoolModel.findAll({ include, order: [['updatedAt', 'ASC']] });
 }
 
 function get(id, generations = false) {
@@ -41,10 +43,39 @@ function remove(id) {
   return PoolModel.destroy({ where: { id } });
 }
 
+async function transfer({ toPoolId, fromPoolId, generations = [] }) {
+  return dataStore.sequelize.transaction(async () => {
+    if (generations.length) {
+      await GenerationPoolModel.bulkCreate(generations.reduce((acc, g) => {
+        acc.push({ generationId: g, poolId: toPoolId });
+
+        return acc;
+      }, []));
+
+      return list(true);
+    }
+
+    const fromPoolGenerations = await GenerationPoolModel.findAll({
+      where: { poolId: fromPoolId },
+      raw: true,
+    });
+
+    await GenerationPoolModel.destroy({ where: { poolId: fromPoolId } });
+    await GenerationPoolModel.bulkCreate(fromPoolGenerations.reduce((acc, { generationId }) => {
+      acc.push({ generationId, poolId: toPoolId });
+
+      return acc;
+    }, []));
+
+    return list(true);
+  });
+}
+
 module.exports = {
   list,
   get,
   create,
   patch,
   remove,
+  transfer,
 };

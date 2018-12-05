@@ -34,10 +34,17 @@ async function remove(req, res) {
   res.sendStatus(204);
 }
 
+async function transfer(req, res) {
+  const pools = await poolService.transfer(req.body);
+
+  res.json(pools);
+}
+
 module.exports = {
   list,
   get,
   create,
   patch,
   remove,
+  transfer,
 };

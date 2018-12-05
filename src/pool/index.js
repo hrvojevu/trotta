@@ -10,6 +10,7 @@ router
   .post('/types/:id', poolTypeController.create)
   .patch('/types/:id', poolTypeController.patch)
   .delete('/types/:id', poolTypeController.remove)
+  .post('/transfer', poolController.transfer)
   .get('/', poolController.list)
   .get('/:id', poolController.get)
   .post('/', poolController.create)
