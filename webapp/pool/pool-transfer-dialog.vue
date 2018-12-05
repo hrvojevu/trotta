@@ -175,6 +175,8 @@
 </template>
 
 <script>
+import { sortBy } from 'lodash';
+
 const REGULAR_TRANSFER = 'REGULAR_TRANSFER';
 const INITIAL_TRANFER = 'INITIAL_TRANFER';
 
@@ -217,7 +219,7 @@ export default {
   },
   computed: {
     poolsWithGeneration() {
-      return this.pools.filter((p) => p.generations.length);
+      return sortBy(this.pools.filter((p) => p.generations.length), 'spawnDate');
     },
     generationsInFromPool() {
       return this.selectedFromPool ?

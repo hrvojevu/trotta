@@ -37,7 +37,8 @@ export default {
   data() {
     return {
       pagination: {
-        sortBy: 'name',
+        descending: true,
+        sortBy: 'spawnDate',
         rowsPerPage: 10,
       },
       headers: [
