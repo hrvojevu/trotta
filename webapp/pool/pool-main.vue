@@ -3,7 +3,14 @@
     <v-layout row wrap>
       <v-flex class="mb-4" xs12>
         <v-btn
-          v-for="pool in pools"
+          :to="{ path: `/bazeni/${$route.params.type}` }"
+          small
+          exact
+        >
+          {{ $route.params.type }}
+        </v-btn>
+        <v-btn
+          v-for="pool in selectedPools"
           :key="pool.id"
           :to="{ path: `/bazeni/${pool.type.code}/${pool.id}` }"
           small
@@ -19,12 +26,20 @@
         >
           <v-icon dark>add</v-icon>
         </v-btn>
+        <v-btn
+          @click="showTransferDialog"
+          color="secondary"
+          class="ml-0"
+          fab
+        >
+          <v-icon dark large>compare_arrows</v-icon>
+        </v-btn>
       </v-flex>
       <v-flex v-if="!$route.params.id" xs12>
         <v-card>
           <v-card-text>
             <pool-datatable
-              :pools="pools"
+              :pools="selectedPools"
             />
           </v-card-text>
         </v-card>
@@ -38,6 +53,14 @@
       @close="closeDialog"
       @submit="submitPool"
     />
+    <pool-transfer-dialog
+      v-if="isTransferDialogShown"
+      :dialog="isTransferDialogShown"
+      :generations="generations"
+      :pools="pools"
+      @close="closeTransferDialog"
+      @submit="submitTransfer"
+    />
   </v-container>
 </template>
 
@@ -46,33 +69,39 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 
 import PoolCreateEditDialog from './pool-create-edit-dialog';
 import PoolDatatable from './pool-datatable';
+import PoolTransferDialog from './pool-transfer-dialog';
 
 export default {
   components: {
     PoolCreateEditDialog,
     PoolDatatable,
+    PoolTransferDialog,
   },
   async fetch({ app, store }) {
-    const pools = await app.$axios.$get('/pools');
+    const generations = await app.$axios.$get('/generations?pools=true');
+    const pools = await app.$axios.$get('/pools?generations=true');
     const types = await app.$axios.$get('/pools/types');
 
+    store.commit('generation/set', generations);
     store.commit('pool/set', pools);
     store.commit('pool/setTypes', types);
   },
   data() {
     return {
       isPoolDialogShown: false,
+      isTransferDialogShown: false,
     };
   },
   computed: {
-    ...mapState('pool', ['types']),
+    ...mapState('generation', ['generations']),
+    ...mapState('pool', ['pools', 'types']),
     ...mapGetters('pool', ['poolsByType']),
-    pools() {
+    selectedPools() {
       return this.poolsByType.get(this.$route.params.type);
     },
   },
   methods: {
-    ...mapActions('pool', ['create', 'update']),
+    ...mapActions('pool', ['create', 'update', 'transfer']),
     async submitPool(pool) {
       if (pool.id) {
         await this.update(pool);
@@ -87,6 +116,16 @@ export default {
     },
     showDialog() {
       this.isPoolDialogShown = true;
+    },
+    showTransferDialog() {
+      this.isTransferDialogShown = true;
+    },
+    closeTransferDialog() {
+      this.isTransferDialogShown = false;
+    },
+    submitTransfer(transferInfo) {
+      this.isTransferDialogShown = false;
+      this.transfer(transferInfo);
     },
   },
 };

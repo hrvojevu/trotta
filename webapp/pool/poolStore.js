@@ -48,6 +48,12 @@ const poolStore = {
 
       commit('remove', id);
     },
+    async transfer({ commit, dispatch }, transferInfo) {
+      const res = await this.$axios.$post('/pools/transfer', transferInfo);
+
+      dispatch('generation/list', null, { root: true });
+      commit('set', res);
+    },
   },
   mutations: {
     set: (state, pools) => {

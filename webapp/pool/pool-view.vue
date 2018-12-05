@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap>
-    <v-flex xs2>
+    <v-flex xs4>
       <v-card>
         <v-card-title primary-title>
           <h3 class="headline mb-0">{{ pool.name }}</h3>
