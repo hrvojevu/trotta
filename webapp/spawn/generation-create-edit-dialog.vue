@@ -44,7 +44,10 @@
               />
               <v-date-picker
                 v-model="generation.spawnDate"
+                class="date-picker"
                 no-title
+                locale="hr-HR"
+                first-day-of-week="1"
                 @input="$refs.spawnDateMenu.save(generation.spawnDate)"/>
             </v-menu>
           </v-flex>
@@ -240,3 +243,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.date-picker /deep/ {
+  .accent--text {
+    text-transform: capitalize;
+  }
+}
+</style>
