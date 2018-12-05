@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="generations"
+    :pagination.sync="pagination"
   >
     <template slot="items" slot-scope="props">
       <td>
@@ -35,6 +36,10 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        sortBy: 'name',
+        rowsPerPage: 10,
+      },
       headers: [
         { text: 'Ime', value: 'name', align: 'left' },
         { text: 'Bazen', value: 'pool', align: 'center' },
