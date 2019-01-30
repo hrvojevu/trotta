@@ -132,21 +132,22 @@
       <v-stepper-step step="4">Provjera transfera</v-stepper-step>
       <v-stepper-content step="4">
         <v-layout v-if="selectedToPool">
-          <v-chip
-            v-if="transferType === REGULAR_TRANSFER"
-            v-for="generation in generationsInFromPool"
-            :key="generation.id"
-            color="primary"
-            text-color="white"
-          >
-            {{ generation.name }}
-          </v-chip>
+          <template v-if="transferType === REGULAR_TRANSFER">
+            <v-chip
+              v-for="generation in generationsInFromPool"
+              :key="generation.id"
+              color="primary"
+              text-color="white"
+            >
+              {{ generation.name }}
+            </v-chip>
+          </template>
           <v-chip
             v-if="transferType === INITIAL_TRANFER"
             color="primary"
             text-color="white"
           >
-            {{ selectedGeneration.name }}
+            {{ selectedGeneration ? selectedGeneration.name : '' }}
           </v-chip>
           <v-icon large>keyboard_arrow_right</v-icon>
           <v-chip color="secondary" text-color="white">{{ selectedToPool.name }}</v-chip>
