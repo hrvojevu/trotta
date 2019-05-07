@@ -31,9 +31,11 @@ class PoolModel extends Model {
       },
       count: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
       countKg: {
         type: DataTypes.FLOAT,
+        defaultValue: 0,
       },
       // Define timestamp fields explicitly to preserve camelCase in code
       createdAt: {
