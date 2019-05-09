@@ -34,8 +34,15 @@ async function remove(req, res) {
   res.sendStatus(204);
 }
 
-async function transfer(req, res) {
-  const pools = await poolService.transfer(req.body);
+async function transfer({ body, query }, res) {
+  const isInitialTransfer = query.initial === 'true';
+  let pools;
+
+  if (isInitialTransfer) {
+    pools = await poolService.initialTransfer(body);
+  } else {
+    pools = await poolService.transfer(body);
+  }
 
   res.json(pools);
 }

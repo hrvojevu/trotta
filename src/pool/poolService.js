@@ -43,29 +43,53 @@ function remove(id) {
   return PoolModel.destroy({ where: { id } });
 }
 
-async function transfer({ toPoolId, fromPoolId, generations = [] }) {
+async function initialTransfer({ toPoolId, generationId }) {
+  await GenerationPoolModel.create({ generationId, poolId: toPoolId });
+
+  return list(true);
+}
+
+async function transfer({ toPoolId, fromPoolId, transferCount }) {
+  const include = [{ model: GenerationModel, as: 'generations' }];
+  const fromPool = await PoolModel.findById(fromPoolId, { include });
+
+  if (!fromPool) {
+    throw new Error('From pool not found.');
+  }
+
+  const toPool = await PoolModel.findById(toPoolId, { include });
+
+  if (!toPool) {
+    throw new Error('To pool not found.');
+  }
+
+  const toPoolGenerationIds = toPool.generations.map((g) => g.id);
+  const { generations } = fromPool;
+  let { count, countKg } = fromPool;
+
   return dataStore.sequelize.transaction(async () => {
-    if (generations.length) {
-      await GenerationPoolModel.bulkCreate(generations.reduce((acc, g) => {
-        acc.push({ generationId: g, poolId: toPoolId });
+    if (count === transferCount) {
+      // Destroy generation-pool relations associated with `fromPool`
+      await GenerationPoolModel.destroy({ where: { poolId: fromPoolId } });
+      await PoolModel.update({ count: 0, countKg: 0 }, { where: { id: fromPoolId } });
+    } else {
+      const transferedPercentage = transferCount / count;
 
-        return acc;
-      }, []));
+      count = transferCount;
+      countKg *= transferedPercentage;
 
-      return list(true);
+      await PoolModel.decrement({ count, countKg }, { where: { id: fromPoolId } });
     }
 
-    const fromPoolGenerations = await GenerationPoolModel.findAll({
-      where: { poolId: fromPoolId },
-      raw: true,
-    });
-
-    await GenerationPoolModel.destroy({ where: { poolId: fromPoolId } });
-    await GenerationPoolModel.bulkCreate(fromPoolGenerations.reduce((acc, { generationId }) => {
-      acc.push({ generationId, poolId: toPoolId });
+    await GenerationPoolModel.bulkCreate(generations.reduce((acc, { id: generationId }) => {
+      // Create new generation-pool relation only if a generation is not in the `toPool` already
+      if (!toPoolGenerationIds.includes(generationId)) {
+        acc.push({ generationId, poolId: toPoolId });
+      }
 
       return acc;
     }, []));
+    await PoolModel.increment({ count, countKg }, { where: { id: toPoolId } });
 
     return list(true);
   });
@@ -77,5 +101,6 @@ module.exports = {
   create,
   patch,
   remove,
+  initialTransfer,
   transfer,
 };
