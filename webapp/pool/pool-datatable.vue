@@ -7,7 +7,14 @@
     no-results-text="Nema dostupnih podataka"
   >
     <template slot="items" slot-scope="props">
-      <td>{{ props.item.name }}</td>
+      <td>
+        <v-btn
+          :to="{ path: `/bazeni/${props.item.type.code}/${props.item.id}` }"
+          flat
+        >
+          {{ props.item.name }}
+        </v-btn>
+      </td>
       <td class="text-xs-center">
         <v-chip color="secondary" text-color="white">{{ props.item.type.code }}</v-chip>
       </td>
@@ -22,9 +29,8 @@
         </v-chip>
         <span v-if="!props.item.generations.length">-</span>
       </td>
-      <td class="text-xs-center">{{ props.item.length || '-' }}</td>
-      <td class="text-xs-center">{{ props.item.width || '-' }}</td>
-      <td class="text-xs-center">{{ props.item.depth || '-' }}</td>
+      <td class="text-xs-center">{{ props.item.count }}</td>
+      <td class="text-xs-center">{{ props.item.countKg }}</td>
     </template>
   </v-data-table>
 </template>
@@ -47,9 +53,8 @@ export default {
         { text: 'Ime', value: 'name', align: 'left' },
         { text: 'Tip', value: 'type', align: 'center' },
         { text: 'Generacije', value: 'generations', align: 'center' },
-        { text: 'Dužina', value: 'length', align: 'center' },
-        { text: 'Širina', value: 'width', align: 'center' },
-        { text: 'Dubina', value: 'depth', align: 'center' },
+        { text: 'Količina (kom)', value: 'count', align: 'center' },
+        { text: 'Količina (kg)', value: 'countKg', align: 'center' },
       ],
     };
   },
