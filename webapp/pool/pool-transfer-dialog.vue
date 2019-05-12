@@ -2,7 +2,7 @@
   <v-dialog
     v-model="dialog"
     persistent
-    max-width="500"
+    max-width="600"
   >
     <v-stepper v-model="step" vertical>
       <v-btn
@@ -27,17 +27,16 @@
           Nastavi
         </v-btn>
       </v-stepper-content>
-      <v-stepper-step :complete="step > 2" step="2">
-        {{ transferType === REGULAR_TRANSFER ? 'Odaberi izvorišni bazen' : 'Odaberi generaciju' }}
-      </v-stepper-step>
-      <v-stepper-content step="2">
-        <div v-show="transferType === REGULAR_TRANSFER">
+      <template v-if="transferType === REGULAR_TRANSFER">
+        <v-stepper-step :complete="step > 2" step="2">Odaberi izvorišni bazen</v-stepper-step>
+        <v-stepper-content step="2">
           <v-autocomplete
             v-model="selectedFromPool"
-            v-validate="'required'"
+            v-validate="{ required: true }"
             :error-messages="errors.collect('fromPool')"
             :items="poolsWithGeneration"
             :no-data-text="noDataText"
+            key="fromPool"
             data-vv-name="fromPool"
             label="Izvorišni bazena"
             item-text="name"
@@ -45,15 +44,10 @@
             persistent-hint
             box
           />
-          <div
-            v-if="selectedFromPool"
-            class="pool-info mb-3"
-            xs12
-          >
+          <div v-if="selectedFromPool" class="pool-info mb-3">
             <span class="label">Trenutne generacije</span>
-            <span v-if="!generationsInFromPool.length" class="pool-gens">-</span>
+            <span v-if="!generationsInFromPool.length">-</span>
             <v-chip
-              v-else
               v-for="generation in generationsInFromPool"
               :key="generation.id"
               color="primary"
@@ -62,121 +56,267 @@
               {{ generation.name }}
             </v-chip>
           </div>
-        </div>
-        <v-autocomplete
-          v-show="transferType === INITIAL_TRANFER"
-          v-model="selectedGeneration"
-          v-validate="'required'"
-          :error-messages="errors.collect('generation')"
-          :items="generationsWithoutPool"
-          :no-data-text="noDataText"
-          data-vv-name="generation"
-          label="Generacija"
-          item-text="name"
-          return-object
-          persistent-hint
-          box
-        />
-        <v-btn
-          color="primary"
-          @click="transferType === REGULAR_TRANSFER ? nextStep(2, 'fromPool') : nextStep(2, 'generation')"
-          class="ma-0"
-          flat
-        >
-          Nastavi
-        </v-btn>
-        <v-btn @click="step = 1; errors.clear(); selectedGeneration = null" flat>Natrag</v-btn>
-      </v-stepper-content>
-      <v-stepper-step :complete="step > 3" step="3">Odaberi odredišni bazen</v-stepper-step>
-      <v-stepper-content step="3">
-        <v-autocomplete
-          v-model="selectedToPool"
-          v-validate="'required'"
-          :error-messages="errors.collect('toPool')"
-          :items="pools"
-          :no-data-text="noDataText"
-          data-vv-name="toPool"
-          label="Odredišni bazen"
-          item-text="name"
-          return-object
-          persistent-hint
-          box
-        />
-        <div
-          v-if="selectedToPool"
-          class="pool-info mb-3"
-          xs12
-        >
-          <span class="label">Trenutne generacije</span>
-          <span v-if="!generationsInToPool.length" class="pool-gens">-</span>
-          <v-chip
-            v-else
-            v-for="generation in generationsInToPool"
-            :key="generation.id"
+
+          <v-btn
             color="primary"
-            text-color="white"
+            @click="setStep(2, 'fromPool')"
+            class="ma-0"
+            flat
           >
-            {{ generation.name }}
-          </v-chip>
-        </div>
-        <v-btn
-          color="primary"
-          @click="nextStep(3, 'toPool')"
-          class="ma-0"
-          flat
-        >
-          Nastavi
-        </v-btn>
-        <v-btn @click="step = 2; errors.clear()" flat>Natrag</v-btn>
-      </v-stepper-content>
-      <v-stepper-step step="4">Provjera transfera</v-stepper-step>
-      <v-stepper-content step="4">
-        <v-layout v-if="selectedToPool">
-          <template v-if="transferType === REGULAR_TRANSFER">
+            Nastavi
+          </v-btn>
+          <v-btn @click="step = 1; selectedFromPool = null; errors.clear()" flat>Natrag</v-btn>
+        </v-stepper-content>
+        <v-stepper-step :complete="step > 3" step="3">Odaberi transferiranu količinu</v-stepper-step>
+        <v-stepper-content step="3">
+          <template v-if="selectedFromPool">
+            <div class="pool-info mb-3">
+              <span class="label">Ukupno u bazenu</span>
+              <span>{{ selectedFromPool.count }}</span>
+            </div>
+            <v-text-field
+              v-model="transferCount"
+              v-validate="{ required: true, min_value: 1, max_value: selectedFromPool.count }"
+              :error-messages="errors.collect('transferCount')"
+              :max="selectedFromPool.count"
+              type="number"
+              key="transferCount"
+              label="Transferirana količina"
+              data-vv-name="transferCount"
+              box
+            />
+          </template>
+
+          <v-btn
+            color="primary"
+            @click="setStep(3, 'transferCount')"
+            class="ma-0"
+            flat
+          >
+            Nastavi
+          </v-btn>
+          <v-btn @click="step = 2; transferCount = selectedFromPool.count; errors.clear()" flat>Natrag</v-btn>
+        </v-stepper-content>
+        <v-stepper-step :complete="step > 4" step="4">Odaberi odredišni bazen</v-stepper-step>
+        <v-stepper-content step="4">
+          <v-autocomplete
+            v-model="selectedToPool"
+            v-validate="{ required: true, is_not: selectedFromPool }"
+            :error-messages="errors.collect('toPool')"
+            :items="pools"
+            :no-data-text="noDataText"
+            key="toPool"
+            data-vv-name="toPool"
+            label="Odredišni bazen"
+            item-text="name"
+            return-object
+            persistent-hint
+            box
+          />
+          <div v-if="selectedToPool" class="pool-info mb-3">
+            <span class="label">Trenutne generacije</span>
+            <span v-if="!generationsInToPool.length">-</span>
             <v-chip
-              v-for="generation in generationsInFromPool"
+              v-for="generation in generationsInToPool"
               :key="generation.id"
               color="primary"
               text-color="white"
             >
               {{ generation.name }}
             </v-chip>
-          </template>
-          <v-chip
-            v-if="transferType === INITIAL_TRANFER"
+          </div>
+          <v-btn
             color="primary"
-            text-color="white"
+            @click="setStep(4, 'toPool')"
+            class="ma-0"
+            flat
           >
-            {{ selectedGeneration ? selectedGeneration.name : '' }}
-          </v-chip>
-          <v-icon large>keyboard_arrow_right</v-icon>
-          <v-chip color="secondary" text-color="white">{{ selectedToPool.name }}</v-chip>
-        </v-layout>
-        <v-btn
-          v-if="isSubmitConfirmed"
-          color="primary"
-          flat="flat"
-          @click="submit"
+            Nastavi
+          </v-btn>
+          <v-btn @click="step = 3; selectedToPool = null; errors.clear()" flat>Natrag</v-btn>
+        </v-stepper-content>
+        <v-stepper-step :complete="step > 5" step="5">Provjera transfera</v-stepper-step>
+        <v-stepper-content step="5">
+          <v-layout v-if="selectedFromPool && selectedToPool">
+            <v-flex xs6>
+              <v-sheet color="grey lighten-3" class="text-xs-center">
+                <v-sheet color="grey lighten-2">
+                  <v-chip color="secondary" text-color="white">{{ selectedFromPool.name }}</v-chip>
+                </v-sheet>
+                <v-divider />
+                <h4>Transferirane generacije</h4>
+                <v-chip
+                  v-for="generation in generationsInFromPool"
+                  :key="generation.id"
+                  color="primary"
+                  text-color="white"
+                >
+                  {{ generation.name }}
+                </v-chip>
+                <v-divider />
+                <h4>Transferirana količina</h4>
+                <v-chip label>
+                  <v-icon left>mdi-fish</v-icon>
+                  {{ transferCount }} kom
+                </v-chip>
+                <v-chip label>
+                  <v-icon left>mdi-weight-kilogram</v-icon>
+                  {{ transferCountKg }} kg
+                </v-chip>
+              </v-sheet>
+            </v-flex>
+            <v-icon large>keyboard_arrow_right</v-icon>
+            <v-flex xs6>
+              <v-sheet color="grey lighten-3" class="text-xs-center">
+                <v-sheet color="grey lighten-2">
+                  <v-chip color="secondary" text-color="white">{{ selectedToPool.name }}</v-chip>
+                </v-sheet>
+                <v-divider />
+                <h4>Trenutne generacije</h4>
+                <span v-if="!generationsInToPool.length">-</span>
+                <template v-else>
+                  <v-chip
+                    v-for="generation in generationsInToPool"
+                    :key="generation.id"
+                    color="primary"
+                    text-color= "white"
+                  >
+                    {{ generation.name }}
+                  </v-chip>
+                  <v-divider />
+                  <h4>Trenutna količina</h4>
+                  <v-chip label>
+                    <v-icon left>mdi-fish</v-icon>
+                    {{ selectedToPool.count }} kom
+                  </v-chip>
+                  <v-chip label>
+                    <v-icon left>mdi-weight-kilogram</v-icon>
+                    {{ selectedToPool.countKg }} kg
+                  </v-chip>
+                </template>
+              </v-sheet>
+            </v-flex>
+          </v-layout>
+
+          <v-btn
+            v-if="isSubmitConfirmed"
+            color="primary"
+            flat="flat"
+            @click="submit"
+          >
+            Potvrdi
+          </v-btn>
+          <v-btn
+            v-else
+            color="primary"
+            @click="isSubmitConfirmed = true"
+            class="ma-0"
+            flat
+          >
+            Spremi
+          </v-btn>
+          <v-btn @click="step = 4; isSubmitConfirmed = false" flat>Natrag</v-btn>
+        </v-stepper-content>
+      </template>
+
+      <template v-else>
+        <v-stepper-step :complete="step > 2" step="2">Odaberi generaciju</v-stepper-step>
+        <v-stepper-content step="2">
+          <v-autocomplete
+            v-model="selectedGeneration"
+            v-validate="{ required: true }"
+            :error-messages="errors.collect('generation')"
+            :items="generationsWithoutPool"
+            :no-data-text="noDataText"
+            key="generation"
+            data-vv-name="generation"
+            label="Generacija"
+            item-text="name"
+            return-object
+            persistent-hint
+            box
+          />
+
+          <v-btn
+            color="primary"
+            @click="setStep(2, 'generation')"
+            class="ma-0"
+            flat
+          >
+            Nastavi
+          </v-btn>
+          <v-btn @click="step = 1; selectedGeneration = null; errors.clear()" flat>Natrag</v-btn>
+        </v-stepper-content>
+        <v-stepper-step :complete="step > 3" step="3">Odaberi odredišni bazen</v-stepper-step>
+        <v-stepper-content step="3">
+          <v-autocomplete
+            v-model="selectedToPool"
+            v-validate="{ required: true }"
+            :error-messages="errors.collect('toPool')"
+            :items="poolsWithoutGeneration"
+            :no-data-text="noDataText"
+            key="toPool"
+            data-vv-name="toPool"
+            label="Odredišni bazen"
+            item-text="name"
+            return-object
+            persistent-hint
+            box
+          />
+
+          <v-btn
+            color="primary"
+            @click="setStep(3, 'toPool')"
+            class="ma-0"
+            flat
+          >
+            Nastavi
+          </v-btn>
+          <v-btn @click="step = 2; selectedToPool = null; errors.clear()" flat>Natrag</v-btn>
+        </v-stepper-content>
+        <v-stepper-step step="4">Provjera transfera</v-stepper-step>
+        <v-stepper-content
+          v-if="selectedGeneration && selectedToPool"
+          :complete="step > 4"
+          step="4"
         >
-          Potvrdi
-        </v-btn>
-        <v-btn
-          v-else
-          color="primary"
-          @click="isSubmitConfirmed = true"
-          class="ma-0"
-          flat
-        >
-          Spremi
-        </v-btn>
-        <v-btn @click="step = 3; isSubmitConfirmed = false" flat>Natrag</v-btn>
-      </v-stepper-content>
+          <v-layout>
+            <v-chip
+              color="primary"
+              text-color="white"
+            >
+              {{ selectedGeneration.name }}
+            </v-chip>
+            <v-icon large>keyboard_arrow_right</v-icon>
+            <v-chip color="secondary" text-color="white">{{ selectedToPool.name }}</v-chip>
+          </v-layout>
+
+          <v-btn
+            v-if="isSubmitConfirmed"
+            color="primary"
+            flat="flat"
+            @click="submit"
+          >
+            Potvrdi
+          </v-btn>
+          <v-btn
+            v-else
+            color="primary"
+            @click="isSubmitConfirmed = true"
+            class="ma-0"
+            flat
+          >
+            Spremi
+          </v-btn>
+          <v-btn @click="step = 3; isSubmitConfirmed = false" flat>Natrag</v-btn>
+        </v-stepper-content>
+      </template>
     </v-stepper>
   </v-dialog>
 </template>
 
 <script>
-import { sortBy } from 'lodash';
+import { get } from 'lodash';
 
 const REGULAR_TRANSFER = 'REGULAR_TRANSFER';
 const INITIAL_TRANFER = 'INITIAL_TRANFER';
@@ -186,18 +326,12 @@ export default {
     validator: 'new'
   },
   props: {
-    dialog: {
-      type: Boolean,
-      default: false,
-    },
-    generations: {
-      type: Array,
-      default: () => ([]),
-    },
-    pools: {
-      type: Array,
-      default: () => ([]),
-    },
+    dialog: { type: Boolean, default: false },
+    generations: { type: Array, default: () => ([]) },
+    generationsWithoutPool: { type: Array, default: () => ([]) },
+    pools: { type: Array, default: () => ([]) },
+    poolsWithGeneration: { type: Array, default: () => ([]) },
+    poolsWithoutGeneration: { type: Array, default: () => ([]) },
   },
   data() {
     return {
@@ -207,21 +341,27 @@ export default {
       step: 1,
       selectedFromPool: null,
       selectedToPool: null,
+      transferCount: 0,
       selectedGeneration: null,
       isSubmitConfirmed: false,
       noDataText: 'Nema dostupnih podataka',
       dictionary: {
         messages: {
-          required: 'Polje ne smije biti prazno'
+          required: 'Polje ne smije biti prazno',
+          min_value: 'Unesena vrijednost ne smije biti 0',
+          max_value: 'Unesena vrijednost ne smije biti veća od količine u izvorišnom bazenu',
+          is_not: 'Odredišni bazen mora biti različit od izvorišnog',
         },
       },
       error: '',
     };
   },
-  computed: {
-    poolsWithGeneration() {
-      return sortBy(this.pools.filter((p) => p.generations.length), 'spawnDate');
+  watch: {
+    selectedFromPool(pool) {
+      this.transferCount = get(pool, 'count', 0);
     },
+  },
+  computed: {
     generationsInFromPool() {
       return this.selectedFromPool ?
         this.pools.find((p) => this.selectedFromPool.id === p.id).generations : [];
@@ -230,15 +370,17 @@ export default {
       return this.selectedToPool ?
         this.pools.find((p) => this.selectedToPool.id === p.id).generations : [];
     },
-    generationsWithoutPool() {
-      return this.generations.filter((g) => !g.pools.length);
+    transferCountKg() {
+      const transferedPercentage = this.transferCount / this.selectedFromPool.count;
+
+      return this.selectedFromPool.countKg * transferedPercentage;
     },
   },
   mounted() {
     this.$validator.localize('hr', this.dictionary);
   },
   methods: {
-    async nextStep(currentStep, field) {
+    async setStep(currentStep, field) {
       if (!field) {
         this.step = currentStep + 1;
 
@@ -252,16 +394,19 @@ export default {
       }
 
       this.step = currentStep + 1;
+      this.errors.clear();
     },
     async submit() {
       if (this.transferType === REGULAR_TRANSFER) {
         this.$emit('submit', {
           fromPoolId: this.selectedFromPool.id,
           toPoolId: this.selectedToPool.id,
+          transferCount: this.transferCount,
         });
       } else if (this.transferType === INITIAL_TRANFER) {
         this.$emit('submit', {
-          generations: [this.selectedGeneration.id],
+          initial: true,
+          generationId: this.selectedGeneration.id,
           toPoolId: this.selectedToPool.id,
         });
       }
@@ -282,10 +427,6 @@ export default {
     display: block;
     font-size: 12px;
     color: rgba(0, 0, 0, 0.54);
-  }
-
-  .pool-gens {
-    font-size: 16px;
   }
 }
 </style>

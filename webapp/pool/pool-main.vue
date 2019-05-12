@@ -58,6 +58,9 @@
       :dialog="isTransferDialogShown"
       :generations="generations"
       :pools="pools"
+      :pools-with-generation="poolsWithGeneration"
+      :pools-without-generation="poolsWithoutGeneration"
+      :generations-without-pool="generationsWithoutPool"
       @close="closeTransferDialog"
       @submit="submitTransfer"
     />
@@ -65,6 +68,7 @@
 </template>
 
 <script>
+import { sortBy } from 'lodash';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 import PoolCreateEditDialog from './pool-create-edit-dialog';
@@ -98,6 +102,15 @@ export default {
     ...mapGetters('pool', ['poolsByType']),
     selectedPools() {
       return this.poolsByType.get(this.$route.params.type);
+    },
+    poolsWithGeneration() {
+      return sortBy(this.pools.filter((p) => p.generations.length), 'spawnDate');
+    },
+    poolsWithoutGeneration() {
+      return sortBy(this.pools.filter((p) => !p.generations.length), 'spawnDate');
+    },
+    generationsWithoutPool() {
+      return this.generations.filter((g) => !g.pools.length);
     },
   },
   methods: {
