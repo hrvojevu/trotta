@@ -1,3 +1,5 @@
+import { omit } from 'lodash';
+
 const poolStore = {
   namespaced: true,
   state: {
@@ -49,7 +51,8 @@ const poolStore = {
       commit('remove', id);
     },
     async transfer({ commit, dispatch }, transferInfo) {
-      const res = await this.$axios.$post('/pools/transfer', transferInfo);
+      const endpoint = `/pools/transfer${transferInfo.initial ? '?initial=true' : ''}`;
+      const res = await this.$axios.$post(endpoint, omit(transferInfo, 'initial'));
 
       dispatch('generation/list', null, { root: true });
       commit('set', res);
