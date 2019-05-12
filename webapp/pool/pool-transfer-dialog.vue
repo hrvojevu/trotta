@@ -38,7 +38,7 @@
             :no-data-text="noDataText"
             key="fromPool"
             data-vv-name="fromPool"
-            label="Izvorišni bazena"
+            label="Izvorišni bazen"
             item-text="name"
             return-object
             persistent-hint
