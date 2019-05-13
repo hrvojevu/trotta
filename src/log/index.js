@@ -9,5 +9,4 @@ router
   .get('/:id', logController.get)
   .post('/', logController.create);
 
-
 module.exports = { router };

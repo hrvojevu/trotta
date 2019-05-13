@@ -11,5 +11,4 @@ router
   .patch('/:id', generationController.patch)
   .delete('/:id', generationController.remove);
 
-
 module.exports = { router };

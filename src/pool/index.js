@@ -17,5 +17,4 @@ router
   .patch('/:id', poolController.patch)
   .delete('/:id', poolController.remove);
 
-
 module.exports = { router };
