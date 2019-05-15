@@ -34,6 +34,14 @@
         >
           <v-icon dark large>compare_arrows</v-icon>
         </v-btn>
+        <v-btn
+          @click="showMortalityDialog"
+          color="error"
+          class="ml-0"
+          fab
+        >
+          <v-icon dark>delete</v-icon>
+        </v-btn>
       </v-flex>
       <v-flex v-if="!$route.params.id" xs12>
         <v-card>
@@ -64,6 +72,13 @@
       @close="closeTransferDialog"
       @submit="submitTransfer"
     />
+    <mortality-dialog
+      v-if="isMortalityDialogShown"
+      :dialog="isMortalityDialogShown"
+      :pools="poolsWithGeneration"
+      @close="closeMortalityDialog"
+      @submit="submitMortality"
+    />
   </v-container>
 </template>
 
@@ -71,12 +86,14 @@
 import { sortBy } from 'lodash';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
+import MortalityDialog from '../mortality/mortality-dialog';
 import PoolCreateEditDialog from './pool-create-edit-dialog';
 import PoolDatatable from './pool-datatable';
 import PoolTransferDialog from './pool-transfer-dialog';
 
 export default {
   components: {
+    MortalityDialog,
     PoolCreateEditDialog,
     PoolDatatable,
     PoolTransferDialog,
@@ -94,6 +111,7 @@ export default {
     return {
       isPoolDialogShown: false,
       isTransferDialogShown: false,
+      isMortalityDialogShown: false,
     };
   },
   computed: {
@@ -115,6 +133,7 @@ export default {
   },
   methods: {
     ...mapActions('pool', ['create', 'update', 'transfer']),
+    ...mapActions('mortality', { mortalityCreate: 'create' }),
     async submitPool(pool) {
       if (pool.id) {
         await this.update(pool);
@@ -139,6 +158,16 @@ export default {
     submitTransfer(transferInfo) {
       this.isTransferDialogShown = false;
       this.transfer(transferInfo);
+    },
+    showMortalityDialog() {
+      this.isMortalityDialogShown = true;
+    },
+    closeMortalityDialog() {
+      this.isMortalityDialogShown = false;
+    },
+    submitMortality(mortalityInfo) {
+      this.isMortalityDialogShown = false;
+      this.mortalityCreate(mortalityInfo);
     },
   },
 };
