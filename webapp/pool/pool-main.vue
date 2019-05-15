@@ -82,8 +82,8 @@ export default {
     PoolTransferDialog,
   },
   async fetch({ app, store }) {
-    const generations = await app.$axios.$get('/generations?pools=true');
-    const pools = await app.$axios.$get('/pools?generations=true');
+    const generations = await app.$axios.$get('/generations');
+    const pools = await app.$axios.$get('/pools');
     const types = await app.$axios.$get('/pools/types');
 
     store.commit('generation/set', generations);

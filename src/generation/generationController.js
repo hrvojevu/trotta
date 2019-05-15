@@ -3,15 +3,13 @@
 const generationService = require('./generationService');
 
 async function list(req, res) {
-  const includePools = req.query.pools === 'true';
-  const generations = await generationService.list(includePools);
+  const generations = await generationService.list();
 
   res.json(generations);
 }
 
 async function get(req, res) {
-  const includePools = req.query.pools === 'true';
-  const generation = await generationService.get(req.params.id, includePools);
+  const generation = await generationService.get(req.params.id);
 
   res.json(generation);
 }

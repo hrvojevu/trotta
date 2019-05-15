@@ -3,15 +3,15 @@
 const GenerationModel = require('./GenerationModel');
 const PoolModel = require('../pool/PoolModel');
 
-function list(pools = false) {
+function list() {
   return GenerationModel.findAll({
-    include: pools ? [{ model: PoolModel, as: 'pools' }] : [],
+    include: [{ model: PoolModel, as: 'pools' }],
   });
 }
 
-function get(id, pools = false) {
+function get(id) {
   return GenerationModel.findById(id, {
-    include: pools ? [{ model: PoolModel, as: 'pools' }] : [],
+    include: [{ model: PoolModel, as: 'pools' }],
   });
 }
 

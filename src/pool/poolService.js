@@ -6,22 +6,20 @@ const GenerationPoolModel = require('../generation/GenerationPoolModel');
 const PoolModel = require('./PoolModel');
 const PoolTypeModel = require('./PoolTypeModel');
 
-function list(generations = false) {
-  const include = [{ model: PoolTypeModel, as: 'type' }];
-
-  if (generations) {
-    include.push({ model: GenerationModel, as: 'generations' });
-  }
+function list() {
+  const include = [
+    { model: PoolTypeModel, as: 'type' },
+    { model: GenerationModel, as: 'generations' }
+  ];
 
   return PoolModel.findAll({ include, order: [['updatedAt', 'ASC']] });
 }
 
-function get(id, generations = false) {
-  const include = [{ model: PoolTypeModel, as: 'type' }];
-
-  if (generations) {
-    include.push({ model: GenerationModel, as: 'generations' });
-  }
+function get(id) {
+  const include = [
+    { model: PoolTypeModel, as: 'type' },
+    { model: GenerationModel, as: 'generations' }
+  ];
 
   return PoolModel.findById(id, { include });
 }

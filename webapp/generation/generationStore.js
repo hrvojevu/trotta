@@ -8,7 +8,7 @@ const generationStore = {
   },
   actions: {
     async list({ commit }) {
-      const generations = await this.$axios.$get('/generations?pools=true');
+      const generations = await this.$axios.$get('/generations');
 
       commit('set', generations);
     },
