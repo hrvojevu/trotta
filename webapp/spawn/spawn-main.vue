@@ -42,7 +42,7 @@ import SpawnDatatable from './spawn-datatable';
 
 export default {
   async fetch({ app, store }) {
-    const generations = await app.$axios.$get('/generations?pools=true');
+    const generations = await app.$axios.$get('/generations');
 
     store.commit('generation/set', generations);
   },
