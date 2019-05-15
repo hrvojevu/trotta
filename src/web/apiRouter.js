@@ -6,6 +6,7 @@ const { router: activityRouter } = require('../activity');
 const { router: authRouter } = require('../auth');
 const { router: generationRouter } = require('../generation');
 const { router: logRouter } = require('../log');
+const { router: mortalityRouter } = require('../mortality');
 const { router: poolRouter } = require('../pool');
 const { router: userRouter } = require('../user');
 
@@ -15,6 +16,7 @@ router.use('/activities', activityRouter);
 router.use('/auth', authRouter);
 router.use('/generations', generationRouter);
 router.use('/logs', logRouter);
+router.use('/mortality', mortalityRouter);
 router.use('/pools', poolRouter);
 router.use('/users', userRouter);
 
