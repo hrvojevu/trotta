@@ -4,7 +4,7 @@ const MortalityModel = require('./MortalityModel');
 const PoolModel = require('../pool/PoolModel');
 const poolService = require('../pool/poolService');
 
-function list({ poolId }) {
+function list({ poolId } = {}) {
   const where = {};
 
   if (poolId) {
@@ -40,7 +40,9 @@ async function create(mortality) {
 
   await pool.decrement({ count, countKg }, { where: { id: poolId } });
 
-  return MortalityModel.create(mortality);
+  const { id } = await MortalityModel.create(mortality);
+
+  return get(id);
 }
 
 module.exports = {
