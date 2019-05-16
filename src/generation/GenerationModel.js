@@ -14,15 +14,6 @@ class GenerationModel extends Model {
         type: DataTypes.STRING,
         validate: { notEmpty: true },
       },
-      length: {
-        type: DataTypes.FLOAT,
-      },
-      width: {
-        type: DataTypes.FLOAT,
-      },
-      weight: {
-        type: DataTypes.FLOAT,
-      },
       spawnDate: {
         type: DataTypes.DATE,
       },
