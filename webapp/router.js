@@ -8,6 +8,7 @@ import Router from 'vue-router';
 import GenerationMain from '~/generation/generation-main';
 import HomeMain from '~/home';
 import LoginMain from '~/auth/login';
+import MortalityMain from '~/mortality/mortality-main';
 import PoolMain from '~/pool/pool-main';
 import PoolView from '~/pool/pool-view';
 import SpawnMain from '~/spawn/spawn-main';
@@ -41,6 +42,10 @@ export function createRouter() {
       {
         path: '/mrijest',
         component: SpawnMain,
+      },
+      {
+        path: '/mortalitet',
+        component: MortalityMain,
       },
       {
         path: '*',

@@ -97,6 +97,7 @@ export default {
         },
         { icon: 'mdi-fish', title: 'Generacije', to: '/generacije' },
         { icon: 'rotate_right', title: 'Mrijest', to: '/mrijest' },
+        { icon: 'delete', title: 'Mortalitet', to: '/mortalitet' },
       ],
       title: 'Trotta'
     };
