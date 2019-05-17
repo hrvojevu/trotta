@@ -40,9 +40,9 @@ async function create(mortality) {
 
   await pool.decrement({ count, countKg }, { where: { id: poolId } });
 
-  const { id } = await MortalityModel.create(mortality);
+  const created = await MortalityModel.create(mortality);
 
-  return get(id);
+  return { ...created.toJSON(), pool };
 }
 
 module.exports = {
