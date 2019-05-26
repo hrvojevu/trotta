@@ -2,10 +2,13 @@
   <v-container fluid>
     <v-btn
       @click="showDialog"
-      fab
+      class="ml-0"
       color="primary"
+      outline
+      small
     >
-      <v-icon dark>add</v-icon>
+      mrijest
+      <v-icon class="pl-2">add</v-icon>
     </v-btn>
     <generation-create-edit-dialog
       v-if="isGenerationDialogShown"

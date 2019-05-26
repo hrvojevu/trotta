@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-btn
       @click="showDialog"
+      class="ml-0"
       color="error"
       outline
       small

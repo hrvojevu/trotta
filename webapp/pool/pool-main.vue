@@ -21,6 +21,7 @@
       <v-flex xs12>
         <v-btn
           @click="showTransferDialog"
+          class="ml-0"
           color="secondary"
           outline
           small
@@ -30,6 +31,7 @@
         </v-btn>
         <v-btn
           @click="showMortalityDialog"
+          class="ml-0"
           color="error"
           outline
           small
