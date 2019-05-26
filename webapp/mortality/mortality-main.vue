@@ -3,10 +3,11 @@
     <v-btn
       @click="showDialog"
       color="error"
-      class="ml-0"
-      fab
+      outline
+      small
     >
-      <v-icon dark>delete</v-icon>
+      mortalitet
+      <v-icon class="pl-2">add</v-icon>
     </v-btn>
 
     <v-card>
