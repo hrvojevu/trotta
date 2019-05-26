@@ -20,27 +20,22 @@
       </v-flex>
       <v-flex xs12>
         <v-btn
-          @click="showDialog"
-          fab
-          color="primary"
-        >
-          <v-icon dark>add</v-icon>
-        </v-btn>
-        <v-btn
           @click="showTransferDialog"
           color="secondary"
-          class="ml-0"
-          fab
+          outline
+          small
         >
-          <v-icon dark large>compare_arrows</v-icon>
+          Transfer
+          <v-icon class="pl-2">compare_arrows</v-icon>
         </v-btn>
         <v-btn
           @click="showMortalityDialog"
           color="error"
-          class="ml-0"
-          fab
+          outline
+          small
         >
-          <v-icon dark>delete</v-icon>
+          mortalitet
+          <v-icon class="pl-2">add</v-icon>
         </v-btn>
       </v-flex>
       <v-flex v-if="!$route.params.id" xs12>
@@ -54,13 +49,6 @@
       </v-flex>
       <router-view/>
     </v-layout>
-    <pool-create-edit-dialog
-      v-if="isPoolDialogShown"
-      :dialog="isPoolDialogShown"
-      :pool-types="types"
-      @close="closeDialog"
-      @submit="submitPool"
-    />
     <pool-transfer-dialog
       v-if="isTransferDialogShown"
       :dialog="isTransferDialogShown"
@@ -87,14 +75,12 @@ import { sortBy } from 'lodash';
 import { mapState, mapGetters, mapActions } from 'vuex';
 
 import MortalityDialog from '../mortality/mortality-dialog';
-import PoolCreateEditDialog from './pool-create-edit-dialog';
 import PoolDatatable from './pool-datatable';
 import PoolTransferDialog from './pool-transfer-dialog';
 
 export default {
   components: {
     MortalityDialog,
-    PoolCreateEditDialog,
     PoolDatatable,
     PoolTransferDialog,
   },
@@ -109,7 +95,6 @@ export default {
   },
   data() {
     return {
-      isPoolDialogShown: false,
       isTransferDialogShown: false,
       isMortalityDialogShown: false,
     };
@@ -132,23 +117,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('pool', ['create', 'update', 'transfer']),
+    ...mapActions('pool', ['transfer']),
     ...mapActions('mortality', { mortalityCreate: 'create' }),
-    async submitPool(pool) {
-      if (pool.id) {
-        await this.update(pool);
-      } else {
-        await this.create(pool);
-      }
-
-      this.isPoolDialogShown = false;
-    },
-    closeDialog() {
-      this.isPoolDialogShown = false;
-    },
-    showDialog() {
-      this.isPoolDialogShown = true;
-    },
     showTransferDialog() {
       this.isTransferDialogShown = true;
     },
