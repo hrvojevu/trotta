@@ -1,7 +1,7 @@
 {
-  "name": "the-black-project",
+  "name": "trotta-app",
   "version": "1.0.0",
-  "description": "My laudable Nuxt.js project",
+  "description": "Management app for Trotta",
   "author": "Hrvoje Vucic",
   "private": true,
   "scripts": {
