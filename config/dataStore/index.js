@@ -28,9 +28,9 @@ exports.default = {
 exports.development = {
   options: {
     logging: false,
-    schema: 'black-db',
+    schema: 'trotta-db',
   },
-  uri: 'postgres://0.0.0.0:5432/black-db',
+  uri: 'postgres://0.0.0.0:5432/trotta-db',
 };
 
 exports.production = {
