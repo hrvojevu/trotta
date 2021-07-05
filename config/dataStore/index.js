@@ -36,5 +36,11 @@ exports.development = {
 exports.production = {
   options: {
     schema: 'public',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
   },
 };
